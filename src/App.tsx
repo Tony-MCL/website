@@ -3,8 +3,12 @@ import {
   HashRouter as Router,
   Routes,
   Route,
-  Navigate
+  Navigate,
 } from "react-router-dom";
+
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import WatermarkLayer from "./components/WatermarkLayer";
 
 import HomePage from "./pages/HomePage";
 import FormelsamlingPage from "./pages/FormelsamlingPage";
@@ -24,24 +28,20 @@ import StatsPage from "./admin/StatsPage";
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="app-root">
+      <WatermarkLayer />
+      <Header />
+
+      <div style={{ paddingTop: "var(--header-height)" }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
-
-          <Route
-            path="/produkter/formelsamling"
-            element={<FormelsamlingPage />}
-          />
-
+          <Route path="/produkter/formelsamling" element={<FormelsamlingPage />} />
           <Route path="/idebank" element={<IdeaBankPage />} />
           <Route path="/om" element={<AboutPage />} />
           <Route path="/kontakt" element={<ContactPage />} />
-
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/cancel" element={<CancelPage />} />
 
           <Route path="/admin" element={<AdminPage />} />
-
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/kunder" element={<CustomersPage />} />
           <Route path="/admin/lisenser" element={<LicensesPage />} />
@@ -51,6 +51,8 @@ const App: React.FC = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
+
+      <Footer />
     </Router>
   );
 };
