@@ -2,17 +2,59 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 
+/**
+ * Standardisert lisens-skjema vi sikter mot i Firestore (collection: licenses).
+ *
+ * Felter som skal brukes fremover:
+ * - email, customerName, product
+ * - licenseType: "trial" | "paid"
+ * - billingModel: "subscription" | "one_time" | null
+ * - billingPeriod: "month" | "year" | null
+ * - stripePriceId, stripeCustomerId, stripeSubscriptionId
+ * - status: f.eks. "active" | "expired" | "cancelled"
+ * - startsAt, expiresAt, createdAt, updatedAt
+ * - source: "trial-self" | "stripe-checkout" | ...
+ */
+type LicenseType = "trial" | "paid" | null;
+type BillingModel = "subscription" | "one_time" | null;
+type BillingPeriod = "month" | "year" | null;
+
 type LicenseDoc = {
   id: string;
-  email?: string | null;
-  customerName?: string | null;
-  product?: string | null;
-  licenseType?: string | null;
-  isTrial?: boolean;
-  plan?: string | null;
-  status?: string | null;
-  createdAt?: Date | null;
-  expiresAt?: Date | null;
+
+  email: string | null;
+  customerName: string | null;
+  product: string | null;
+
+  licenseType: LicenseType;
+  billingModel: BillingModel;
+  billingPeriod: BillingPeriod;
+
+  stripePriceId: string | null;
+  stripeCustomerId: string | null;
+  stripeSubscriptionId: string | null;
+
+  status: string | null;
+
+  startsAt: Date | null;
+  expiresAt: Date | null;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+
+  source: string | null;
+};
+
+const getDate = (value: any): Date | null => {
+  if (!value) return null;
+  if (value instanceof Date) return value;
+  if (typeof value.toDate === "function") {
+    try {
+      return value.toDate();
+    } catch {
+      return null;
+    }
+  }
+  return null;
 };
 
 const formatDateTime = (d?: Date | null) => {
@@ -43,6 +85,31 @@ const formatDate = (d?: Date | null) => {
   }
 };
 
+const describePlan = (
+  billingModel: BillingModel,
+  billingPeriod: BillingPeriod
+): string => {
+  if (!billingModel && !billingPeriod) return "—";
+
+  if (billingModel === "subscription") {
+    if (billingPeriod === "month") return "Abonnement · måned";
+    if (billingPeriod === "year") return "Abonnement · år";
+    return "Abonnement";
+  }
+
+  if (billingModel === "one_time") {
+    if (billingPeriod === "month") return "Engang · måned";
+    if (billingPeriod === "year") return "Engang · år";
+    return "Engangskjøp";
+  }
+
+  // Fallback hvis noe annet skulle dukke opp
+  if (billingPeriod === "month") return "Måned";
+  if (billingPeriod === "year") return "År";
+
+  return "—";
+};
+
 const LicensesPage: React.FC = () => {
   const [trialLicenses, setTrialLicenses] = useState<LicenseDoc[]>([]);
   const [paidLicenses, setPaidLicenses] = useState<LicenseDoc[]>([]);
@@ -61,29 +128,53 @@ const LicensesPage: React.FC = () => {
         const all: LicenseDoc[] = snap.docs.map((docSnap) => {
           const data = docSnap.data() as any;
 
-          let createdAt: Date | null = null;
-          const tsCreated = data.createdAt;
-          if (tsCreated && typeof tsCreated.toDate === "function") {
-            createdAt = tsCreated.toDate();
+          // licenseType: foretrukket felt.
+          // Hvis vi kun har isTrial i gamle dokumenter, mapper vi det inn her.
+          let licenseType: LicenseType = null;
+          if (data.licenseType === "trial" || data.licenseType === "paid") {
+            licenseType = data.licenseType;
+          } else if (data.isTrial === true) {
+            licenseType = "trial";
+          } else if (data.isTrial === false) {
+            licenseType = "paid";
           }
 
-          let expiresAt: Date | null = null;
-          const tsExpires = data.expiresAt;
-          if (tsExpires && typeof tsExpires.toDate === "function") {
-            expiresAt = tsExpires.toDate();
-          }
+          // billingModel + billingPeriod: bruk nye felter hvis de finnes, ellers fall back til eldre navn.
+          const billingModel: BillingModel =
+            data.billingModel === "subscription" ||
+            data.billingModel === "one_time"
+              ? data.billingModel
+              : null;
+
+          const billingPeriod: BillingPeriod =
+            data.billingPeriod === "month" || data.billingPeriod === "year"
+              ? data.billingPeriod
+              : data.plan === "month" || data.plan === "year"
+              ? data.plan
+              : null;
 
           return {
             id: docSnap.id,
             email: data.email ?? null,
             customerName: data.customerName ?? data.name ?? null,
             product: data.product ?? data.productId ?? null,
-            licenseType: data.licenseType ?? null,
-            isTrial: data.isTrial ?? false,
-            plan: data.plan ?? data.billingPeriod ?? null,
+
+            licenseType,
+            billingModel,
+            billingPeriod,
+
+            stripePriceId: data.stripePriceId ?? null,
+            stripeCustomerId: data.stripeCustomerId ?? null,
+            stripeSubscriptionId: data.stripeSubscriptionId ?? null,
+
             status: data.status ?? null,
-            createdAt,
-            expiresAt,
+
+            startsAt: getDate(data.startsAt),
+            expiresAt: getDate(data.expiresAt),
+            createdAt: getDate(data.createdAt),
+            updatedAt: getDate(data.updatedAt),
+
+            source: data.source ?? null,
           };
         });
 
@@ -91,12 +182,7 @@ const LicensesPage: React.FC = () => {
         const paid: LicenseDoc[] = [];
 
         all.forEach((lic) => {
-          // Vi prøver flere "hint" for å avgjøre om noe er prøve
-          const isTrial =
-            lic.isTrial === true ||
-            lic.licenseType === "trial" ||
-            lic.plan === "trial";
-
+          const isTrial = lic.licenseType === "trial";
           if (isTrial) {
             trials.push(lic);
           } else {
@@ -125,8 +211,9 @@ const LicensesPage: React.FC = () => {
       <h1>Lisenser</h1>
       <p>
         Oversikt over lisenser registrert i Firestore. Lisensene er delt i
-        gratis prøveperioder og betalte lisenser basert på feltene
-        <code> isTrial / licenseType / plan</code>.
+        gratis prøveperioder og betalte lisenser basert på feltet{" "}
+        <code>licenseType</code> (trial / paid). Modellen er klar for både
+        prøvelisens og betalte lisenser via Stripe.
       </p>
 
       {error && <p className="admin-error">{error}</p>}
@@ -152,7 +239,7 @@ const LicensesPage: React.FC = () => {
             {trialLicenses.map((lic) => (
               <div key={lic.id} className="admin-list-row">
                 <span className="admin-col-date">
-                  {formatDateTime(lic.createdAt)}
+                  {formatDateTime(lic.startsAt || lic.createdAt)}
                 </span>
                 <span className="admin-col-from">
                   {lic.customerName || "Ukjent"}{" "}
@@ -160,10 +247,9 @@ const LicensesPage: React.FC = () => {
                 </span>
                 <span className="admin-col-text">
                   <span className="license-badge license-badge-trial">
-                    Prøve
+                    PRØVE
                   </span>{" "}
                   {lic.product || "Ukjent produkt"}
-                  {lic.plan ? <span> · {lic.plan}</span> : null}
                 </span>
                 <span className="admin-col-text">
                   {lic.status ? (
@@ -205,7 +291,7 @@ const LicensesPage: React.FC = () => {
             {paidLicenses.map((lic) => (
               <div key={lic.id} className="admin-list-row">
                 <span className="admin-col-date">
-                  {formatDateTime(lic.createdAt)}
+                  {formatDateTime(lic.startsAt || lic.createdAt)}
                 </span>
                 <span className="admin-col-from">
                   {lic.customerName || "Ukjent"}{" "}
@@ -213,10 +299,16 @@ const LicensesPage: React.FC = () => {
                 </span>
                 <span className="admin-col-text">
                   <span className="license-badge license-badge-paid">
-                    Betalt
+                    BETALT
                   </span>{" "}
                   {lic.product || "Ukjent produkt"}
-                  {lic.plan ? <span> · {lic.plan}</span> : null}
+                  {(() => {
+                    const desc = describePlan(
+                      lic.billingModel,
+                      lic.billingPeriod
+                    );
+                    return desc !== "—" ? <span> · {desc}</span> : null;
+                  })()}
                 </span>
                 <span className="admin-col-text">
                   {lic.status ? (
