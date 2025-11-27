@@ -36,10 +36,14 @@ const IdeaBankPage: React.FC = () => {
       setName("");
       setEmail("");
       setIdea("");
-    } catch (err) {
-      console.error(err);
-      setError("Noe gikk galt ved lagring av idéen. Prøv igjen senere.");
+    } catch (err: any) {
+      console.error("Feil ved lagring av idé:", err);
+      const msg =
+        err?.message ||
+        "Noe gikk galt ved lagring av idéen. Sjekk konsollen for detaljer.";
+      setError(msg);
     } finally {
+      // Denne kjører uansett om det feiler eller ikke
       setSubmitting(false);
     }
   };
