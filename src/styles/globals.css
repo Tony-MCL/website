@@ -1154,4 +1154,38 @@ main.page {
     grid-template-columns: 1fr;
   }
 }
+/* =========================================================
+   LICENSE BADGES
+   ========================================================= */
+
+.license-badge {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-right: 0.4rem;
+}
+
+.license-badge-trial {
+  background: rgba(255, 206, 129, 0.15);
+  border: 1px solid rgba(255, 206, 129, 0.5);
+  color: #ffd58a;
+}
+
+.license-badge-paid {
+  background: rgba(155, 255, 179, 0.12);
+  border: 1px solid rgba(155, 255, 179, 0.5);
+  color: #b6ffcb;
+}
+
+.license-status {
+  font-size: 0.85rem;
+}
+
+.license-expiry {
+  font-size: 0.85rem;
+  color: var(--mcl-text-dim);
+}
 
