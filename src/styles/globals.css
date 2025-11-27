@@ -561,3 +561,42 @@ main.page {
     grid-template-columns: 1fr;
   }
 }
+/* ===== CHECKOUT BUTTON (Stripe) ===== */
+
+.checkout-wrapper {
+  margin-top: 0.7rem;
+}
+
+.checkout-button {
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  background: linear-gradient(90deg, #c48b41 0%, #e2b567 100%);
+  color: #000;
+
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.5);
+  transition: transform 0.12s ease, opacity 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.checkout-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  opacity: 0.92;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.65);
+}
+
+.checkout-button:disabled {
+  cursor: wait;
+  opacity: 0.8;
+}
+
+.error-text {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: #ff9a9a;
+}
