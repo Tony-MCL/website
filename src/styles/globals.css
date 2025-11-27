@@ -144,24 +144,27 @@ main.page {
   justify-content: center;
 
   pointer-events: none;
-
   z-index: 1;
 }
 
-/* Større watermark + glow/emboss-følelse */
+/* ENORM watermark + løftes opp under header */
 .watermark-layer img {
-  width: 82vmin;
-  max-width: 900px;
-  opacity: 0.22;
+  height: 135vh; /* stooor */
+  width: auto;
 
-  /* Svak “glow” + litt blur */
+  opacity: 0.17;
+
+  /* Glow + dybde */
   filter:
-    drop-shadow(0 0 55px rgba(215, 160, 255, 0.35))
-    drop-shadow(0 0 18px rgba(0, 0, 0, 0.9))
-    blur(0.5px);
+    drop-shadow(0 0 70px rgba(200, 120, 255, 0.25))
+    drop-shadow(0 0 40px rgba(0, 0, 0, 0.8))
+    blur(1px);
 
   mix-blend-mode: soft-light;
   user-select: none;
+
+  /* Skyv litt opp så det går bak headeren */
+  transform: translateY(-10%);
 }
 
 /* ===== Mobile adjustments ===== */
@@ -179,8 +182,11 @@ main.page {
     padding: 1.75rem 1.25rem 1.5rem;
   }
 
+  
+@media (max-width: 800px) {
   .watermark-layer img {
-    width: 95vmin;
-    opacity: 0.2;
+    height: 160vh; /* større på mobil også */
+    opacity: 0.18;
+    transform: translateY(-6%);
   }
 }
