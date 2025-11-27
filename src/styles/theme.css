@@ -1,0 +1,19 @@
+:root {
+  /* MCL Dark Theme */
+  --mcl-bg: #0d0d0d;
+  --mcl-surface: #1a1a1a;
+  --mcl-surface-2: #222;
+  --mcl-border: #333;
+
+  --mcl-text: #f2f2f2;
+  --mcl-text-dim: #bbbbbb;
+
+  --mcl-accent: #c48b41; /* karamell/espresso */
+  --mcl-accent-light: #e2b567;
+
+  --mcl-radius: 12px;
+  --mcl-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+
+  /* Header height */
+  --header-height: 70px;
+}
