@@ -1,9 +1,7 @@
 import React from "react";
 
-const watermarkUrl = new URL(
-  "mcl-watermark.svg",
-  import.meta.env.BASE_URL
-).href;
+const assetBase = import.meta.env.BASE_URL || "/";
+const watermarkUrl = `${assetBase}mcl-watermark.svg`;
 
 const WatermarkLayer: React.FC = () => {
   return (
