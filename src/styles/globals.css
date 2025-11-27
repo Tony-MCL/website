@@ -945,3 +945,85 @@ main.page {
     padding: 1.5rem 1.2rem 1.3rem;
   }
 }
+/* =========================================================
+   ADMIN LISTE-VISNING (ideer / meldinger)
+   ========================================================= */
+
+.admin-sub-section {
+  margin-top: 2rem;
+}
+
+.admin-sub-section h2 {
+  margin-bottom: 0.4rem;
+}
+
+.admin-empty {
+  color: var(--mcl-text-dim);
+  font-size: 0.95rem;
+}
+
+.admin-list {
+  margin-top: 0.6rem;
+  border-radius: var(--mcl-radius);
+  border: 1px solid var(--mcl-border);
+  overflow: hidden;
+  background: rgba(10, 10, 10, 0.9);
+}
+
+.admin-list-header,
+.admin-list-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 3fr;
+  gap: 0.6rem;
+  padding: 0.55rem 0.8rem;
+  align-items: flex-start;
+}
+
+.admin-list-header {
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mcl-text-dim);
+}
+
+.admin-list-row:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-list-row:nth-child(even) {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.admin-col-date {
+  font-size: 0.85rem;
+  color: var(--mcl-text-dim);
+  white-space: nowrap;
+}
+
+.admin-col-from {
+  font-size: 0.9rem;
+}
+
+.admin-col-from span {
+  color: var(--mcl-text-dim);
+  font-size: 0.85rem;
+}
+
+.admin-col-text {
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+/* Mobiljustering */
+
+@media (max-width: 800px) {
+  .admin-list-header,
+  .admin-list-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-col-date {
+    order: -1;
+  }
+}
