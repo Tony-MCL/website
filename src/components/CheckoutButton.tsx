@@ -23,48 +23,44 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const handleClick = async () => {
+    setError(null);
+
     if (!workerUrl) {
-      setError("Betaling er ikke aktivert (mangler Stripe Worker URL).");
+      setError("Stripe Worker URL mangler (VITE_STRIPE_WORKER_URL).");
       return;
     }
 
-    setLoading(true);
-    setError(null);
-
     try {
-      const basePath = import.meta.env.BASE_URL || "/";
-      const origin = window.location.origin;
-
-      const successUrl = `${origin}${basePath}#/success`;
-      const cancelUrl = `${origin}${basePath}#/cancel`;
+      setLoading(true);
 
       const response = await fetch(workerUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        // Matcher det workeren forventer: product + billingPeriod + autoRenew
         body: JSON.stringify({
           product,
           billingPeriod,
           autoRenew,
-          successUrl,
-          cancelUrl,
         }),
       });
 
       if (!response.ok) {
+        const text = await response.text().catch(() => "");
+        console.error("Worker error:", text);
         throw new Error(
-          `Feil fra betalingsserver (${response.status}): ${response.statusText}`
+          `Kunne ikke opprette Checkout-session (HTTP ${response.status}).`
         );
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as { url?: string };
 
-      if (!data?.url) {
+      if (!data.url) {
         throw new Error("Mottok ingen betalingslenke fra serveren.");
       }
 
-      window.location.href = data.url as string;
+      window.location.href = data.url;
     } catch (err: any) {
       console.error(err);
       setError(
@@ -89,7 +85,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({
         onClick={handleClick}
         disabled={loading}
       >
-        {loading ? "Sender deg videre til Stripe…" : buttonLabel}
+        {loading ? "Sender deg til betaling..." : buttonLabel}
       </button>
       {error && <p className="error-text">{error}</p>}
     </div>
