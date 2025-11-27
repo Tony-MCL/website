@@ -1,4 +1,5 @@
 import React from "react";
+import CheckoutButton from "../components/CheckoutButton";
 
 const FormelsamlingPage: React.FC = () => {
   return (
@@ -59,7 +60,7 @@ const FormelsamlingPage: React.FC = () => {
           </section>
         </div>
 
-        {/* Høyre kolonne – produktkort */}
+        {/* Høyre kolonne – produktkort + Stripe */}
         <aside className="fs-side">
           <div className="fs-product-card">
             <div className="fs-badge">V1 · På vei mot Pro</div>
@@ -77,12 +78,13 @@ const FormelsamlingPage: React.FC = () => {
             </ul>
 
             <div className="fs-note">
-              Lisenshåndtering og betaling via Stripe kobles inn i neste steg.
+              Betaling håndteres via Stripe Checkout. Etter kjøp sendes du
+              tilbake hit med bekreftelse.
             </div>
           </div>
 
           <div className="fs-licensing">
-            <h4>Lisensmodeller (plan)</h4>
+            <h4>Lisensmodeller</h4>
             <div className="fs-license-grid">
               <div className="fs-license-card">
                 <div className="fs-license-label">Månedlig lisens</div>
@@ -91,9 +93,13 @@ const FormelsamlingPage: React.FC = () => {
                   <li>Tilgang til alle moduler i perioden</li>
                   <li>Kan avsluttes når som helst</li>
                 </ul>
-                <button className="fs-license-btn" disabled>
-                  Stripe-integrasjon kommer
-                </button>
+
+                <CheckoutButton
+                  product="formelsamling"
+                  billingPeriod="month"
+                  autoRenew={true}
+                  label="Kjøp månedslisens"
+                />
               </div>
 
               <div className="fs-license-card">
@@ -103,9 +109,13 @@ const FormelsamlingPage: React.FC = () => {
                   <li>Redusert pris per måned</li>
                   <li>Passer godt for prosjektavdelinger</li>
                 </ul>
-                <button className="fs-license-btn" disabled>
-                  Stripe-integrasjon kommer
-                </button>
+
+                <CheckoutButton
+                  product="formelsamling"
+                  billingPeriod="year"
+                  autoRenew={true}
+                  label="Kjøp årslisens"
+                />
               </div>
             </div>
           </div>
