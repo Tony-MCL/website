@@ -113,21 +113,18 @@ main.page {
   left: 0;
   width: 100vw;
   height: 100vh;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   pointer-events: none;
-
   z-index: 1;
 }
 
 .watermark-layer img {
   width: 60vmin;
-  opacity: 0.08;
-  filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.1))
-    brightness(0.8) contrast(1.2);
+  opacity: 0.18;
+  filter: drop-shadow(0 0 35px rgba(0, 0, 0, 0.8))
+    saturate(1.2);
   user-select: none;
 }
 
@@ -147,6 +144,6 @@ main.page {
 
   .watermark-layer img {
     width: 85vmin;
-    opacity: 0.07;
+    opacity: 0.16;
   }
 }
