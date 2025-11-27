@@ -730,3 +730,75 @@ main.page {
     padding: 1.4rem 1.1rem 1.2rem;
   }
 }
+/* =========================================================
+   ADMIN
+   ========================================================= */
+
+.admin-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.admin-header h1 {
+  margin-bottom: 0.3rem;
+}
+
+.admin-header p {
+  margin: 0;
+  color: var(--mcl-text-dim);
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.3rem;
+}
+
+.admin-stat-card {
+  background: var(--mcl-surface);
+  border: 1px solid var(--mcl-border);
+  border-radius: var(--mcl-radius);
+  box-shadow: var(--mcl-shadow);
+  padding: 1.4rem;
+}
+
+.admin-stat-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.3rem;
+}
+
+.admin-stat-number {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0.4rem 0;
+  color: var(--mcl-accent-light);
+}
+
+.admin-stat-link {
+  font-size: 0.9rem;
+  color: var(--mcl-accent-light);
+}
+
+.admin-nav ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0 0;
+}
+
+.admin-nav li {
+  margin-bottom: 0.4rem;
+}
+
+.admin-nav a {
+  color: var(--mcl-accent-light);
+  font-size: 1rem;
+}
+
+.admin-subpage {
+  max-width: 900px;
+}
+
+.admin-error {
+  color: #ff9a9a;
+}
