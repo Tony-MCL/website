@@ -39,9 +39,12 @@ const ContactPage: React.FC = () => {
       setEmail("");
       setSubject("");
       setMessage("");
-    } catch (err) {
-      console.error(err);
-      setError("Noe gikk galt ved innsending av meldingen. Prøv igjen senere.");
+    } catch (err: any) {
+      console.error("Feil ved innsending av melding:", err);
+      const msg =
+        err?.message ||
+        "Noe gikk galt ved innsending av meldingen. Sjekk konsollen for detaljer.";
+      setError(msg);
     } finally {
       setSubmitting(false);
     }
