@@ -147,23 +147,26 @@ main.page {
   z-index: 1;
 }
 
-/* Stor watermark, litt lavere og mer sentrert */
-.watermark-layer img {
-  height: 118vh;      /* litt mindre enn 135vh */
-  width: auto;
+/* ===== DESKTOP ===== */
+@media (min-width: 801px) {
+  .watermark-layer img {
+    height: 118vh;   /* stor */
+    width: auto;
 
-  opacity: 0.18;
+    opacity: 0.18;
 
-  filter:
-    drop-shadow(0 0 55px rgba(200, 120, 255, 0.28))
-    drop-shadow(0 0 32px rgba(0, 0, 0, 0.85))
-    blur(0.6px);
+    /* Glow + dybde */
+    filter:
+      drop-shadow(0 0 55px rgba(200, 120, 255, 0.28))
+      drop-shadow(0 0 32px rgba(0, 0, 0, 0.85))
+      blur(0.6px);
 
-  mix-blend-mode: soft-light;
-  user-select: none;
+    mix-blend-mode: soft-light;
+    user-select: none;
 
-  /* Bare så vidt inn under headeren */
-  transform: translateY(-4%);
+    /* Senk 1.5 cm → ca 3.5% av typical viewport height */
+    transform: translateY(3.5%);
+  }
 }
 
 /* ===== Mobile adjustments ===== */
@@ -182,11 +185,23 @@ main.page {
   }
 
   
+/* ===== Mobil Watermark===== */
 @media (max-width: 800px) {
   .watermark-layer img {
-    height: 140vh;
-    opacity: 0.19;
-    transform: translateY(-3%);
+    width: 100vw;        /* fyll bredde */
+    height: auto;
+
+    opacity: 0.22;
+
+    /* Mindre dramatisk glow */
+    filter:
+      drop-shadow(0 0 35px rgba(180, 110, 240, 0.25))
+      blur(0.4px);
+
+    mix-blend-mode: soft-light;
+
+    /* Løft litt for å se penere ut bak header */
+    transform: translateY(-5%);
   }
 }
 }
