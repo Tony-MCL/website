@@ -973,7 +973,7 @@ main.page {
 .admin-list-header,
 .admin-list-row {
   display: grid;
-  grid-template-columns: 1fr 1.4fr 3fr;
+  grid-template-columns: 1fr 1.4fr 3fr auto;
   gap: 0.6rem;
   padding: 0.55rem 0.8rem;
   align-items: flex-start;
@@ -1015,6 +1015,125 @@ main.page {
   line-height: 1.4;
 }
 
+.admin-col-actions {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.admin-link-button {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 0.88rem;
+  color: var(--mcl-accent-light);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.admin-link-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.admin-delete-button {
+  color: #ff9a9a;
+}
+
+/* Modal */
+
+.admin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.admin-modal {
+  background: #050505;
+  border-radius: 16px;
+  border: 1px solid var(--mcl-border);
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.9);
+  max-width: 640px;
+  width: 100%;
+  padding: 1.6rem 1.5rem 1.3rem;
+}
+
+.admin-modal h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.admin-modal-meta {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.admin-modal-label {
+  display: block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mcl-text-dim);
+  margin-bottom: 0.2rem;
+}
+
+.admin-modal-field {
+  margin-bottom: 1rem;
+}
+
+.admin-modal-body {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+  border: 1px solid var(--mcl-border);
+  padding: 0.8rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.admin-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.admin-secondary-button,
+.admin-danger-button {
+  border-radius: 999px;
+  padding: 0.45rem 1.2rem;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+}
+
+.admin-secondary-button {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--mcl-text);
+}
+
+.admin-danger-button {
+  background: #c94242;
+  color: #fff;
+}
+
+.admin-danger-button:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.admin-modal-error {
+  margin-top: 0.3rem;
+}
+
 /* Mobiljustering */
 
 @media (max-width: 800px) {
@@ -1023,7 +1142,16 @@ main.page {
     grid-template-columns: 1fr;
   }
 
-  .admin-col-date {
-    order: -1;
+  .admin-col-actions {
+    justify-content: flex-start;
+  }
+
+  .admin-modal {
+    margin: 0 0.8rem;
+  }
+
+  .admin-modal-meta {
+    grid-template-columns: 1fr;
   }
 }
+
