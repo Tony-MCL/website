@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-const logoUrl = new URL("mcl-logo.png", import.meta.env.BASE_URL).href;
+const assetBase = import.meta.env.BASE_URL || "/";
+const logoUrl = `${assetBase}mcl-logo.png`;
 
 const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
 
   const closeMenu = () => setOpen(false);
-
   const isActive = (path: string) => location.pathname === path;
 
   return (
@@ -25,9 +25,7 @@ const Header: React.FC = () => {
             Hjem
           </Link>
           <Link
-            className={
-              isActive("/produkter/formelsamling") ? "active" : ""
-            }
+            className={isActive("/produkter/formelsamling") ? "active" : ""}
             to="/produkter/formelsamling"
           >
             Formelsamling
