@@ -308,3 +308,256 @@ main.page {
     gap: 1.2rem;
   }
 }
+/* =========================================================
+   FORMELSAMLING PAGE
+   ========================================================= */
+
+.formelsamling-page {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* Intro */
+
+.fs-hero {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.fs-hero h1 {
+  font-size: 2.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.fs-tagline {
+  font-size: 1.05rem;
+  color: var(--mcl-text-dim);
+  max-width: 720px;
+  line-height: 1.6;
+}
+
+/* Layout: main + side */
+
+.fs-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+  gap: 2.2rem;
+  align-items: flex-start;
+}
+
+/* Venstre kolonne */
+
+.fs-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.fs-section h2 {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+}
+
+.fs-section p {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+  color: var(--mcl-text-dim);
+}
+
+.fs-section ul {
+  margin: 0.2rem 0 0;
+  padding-left: 1.2rem;
+  color: var(--mcl-text-dim);
+}
+
+.fs-section li {
+  margin-bottom: 0.2rem;
+}
+
+/* Høyre kolonne – produktkort */
+
+.fs-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.fs-product-card {
+  background: var(--mcl-surface);
+  border-radius: var(--mcl-radius);
+  border: 1px solid var(--mcl-border);
+  padding: 1.6rem 1.5rem 1.4rem;
+  box-shadow: var(--mcl-shadow);
+}
+
+.fs-badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(196, 139, 65, 0.16);
+  color: var(--mcl-accent-light);
+  margin-bottom: 0.8rem;
+}
+
+.fs-product-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.fs-product-lead {
+  margin-top: 0;
+  margin-bottom: 0.9rem;
+  color: var(--mcl-text-dim);
+}
+
+.fs-product-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--mcl-text-dim);
+}
+
+.fs-product-list li {
+  margin-bottom: 0.3rem;
+}
+
+.fs-note {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--mcl-text-dim);
+  opacity: 0.9;
+}
+
+/* Lisens-seksjon (uten Stripe enda) */
+
+.fs-licensing h4 {
+  margin: 0 0 0.6rem;
+}
+
+.fs-licensing {
+  background: rgba(10, 10, 10, 0.5);
+  border-radius: var(--mcl-radius);
+  border: 1px dashed var(--mcl-border);
+  padding: 1.2rem 1.3rem 1.3rem;
+}
+
+.fs-license-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.6rem;
+}
+
+.fs-license-card {
+  background: var(--mcl-surface);
+  border-radius: 10px;
+  padding: 1rem;
+  border: 1px solid var(--mcl-border);
+}
+
+.fs-license-label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: var(--mcl-accent-light);
+}
+
+.fs-license-card p {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  color: var(--mcl-text-dim);
+}
+
+.fs-license-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+  color: var(--mcl-text-dim);
+}
+
+.fs-license-card li {
+  margin-bottom: 0.15rem;
+}
+
+.fs-license-btn {
+  margin-top: 0.7rem;
+  width: 100%;
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: rgba(120, 120, 120, 0.25);
+  color: var(--mcl-text-dim);
+  cursor: not-allowed;
+}
+
+/* Gratis vs lisensiert */
+
+.fs-access {
+  margin-top: 1rem;
+}
+
+.fs-access h2 {
+  margin-bottom: 0.4rem;
+}
+
+.fs-access-text {
+  margin-top: 0;
+  margin-bottom: 1.1rem;
+  max-width: 720px;
+  color: var(--mcl-text-dim);
+}
+
+.fs-access-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.3rem;
+}
+
+.fs-access-card {
+  background: var(--mcl-surface);
+  border-radius: var(--mcl-radius);
+  border: 1px solid var(--mcl-border);
+  padding: 1.3rem 1.4rem;
+}
+
+.fs-access-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+  color: var(--mcl-accent-light);
+}
+
+.fs-access-card ul {
+  margin: 0.2rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--mcl-text-dim);
+}
+
+.fs-access-card li {
+  margin-bottom: 0.2rem;
+}
+
+/* Responsiv tilpasning */
+
+@media (max-width: 900px) {
+  .fs-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fs-side {
+    order: -1; /* Produktkortet først på små skjermer */
+  }
+}
+
+@media (max-width: 800px) {
+  .fs-hero h1 {
+    font-size: 2.1rem;
+  }
+
+  .fs-license-grid {
+    grid-template-columns: 1fr;
+  }
+}
