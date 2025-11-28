@@ -24,6 +24,7 @@ type LicenseDoc = {
 
   email: string | null;
   customerName: string | null;
+  customerId: string | null;
   product: string | null;
 
   licenseType: LicenseType;
@@ -65,7 +66,7 @@ const formatDateTime = (d?: Date | null) => {
       month: "2-digit",
       day: "2-digit",
       hour: "2-digit",
-      minute: "2-digit",
+      minute: "2-digit"
     });
   } catch {
     return d.toString();
@@ -79,6 +80,7 @@ const formatDate = (d?: Date | null) => {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
+      year: "numeric"
     });
   } catch {
     return d.toString();
@@ -108,6 +110,29 @@ const describePlan = (
   if (billingPeriod === "year") return "År";
 
   return "—";
+};
+
+/**
+ * Velger hvordan kunde skal vises i tabellen:
+ * - navn + "· e-post" hvis vi har begge og de er ulike
+ * - kun navn hvis vi bare har navn
+ * - kun e-post hvis vi bare har e-post
+ * - "Ukjent" hvis ingenting
+ */
+const renderCustomer = (lic: LicenseDoc) => {
+  const name = lic.customerName || null;
+  const email = lic.email || null;
+
+  if (name && email && name !== email) {
+    return (
+      <>
+        {name} <span>· {email}</span>
+      </>
+    );
+  }
+  if (name) return name;
+  if (email) return email;
+  return "Ukjent";
 };
 
 const LicensesPage: React.FC = () => {
@@ -153,10 +178,24 @@ const LicensesPage: React.FC = () => {
               ? data.plan
               : null;
 
+          // Nytt: hent e-post fra customerEmail hvis den finnes (Stripe-worker),
+          // ellers fall back til eldre "email".
+          const email: string | null =
+            data.customerEmail ?? data.email ?? null;
+
+          // Nytt: customerId for mulig videre bruk (lookup mot customers-collection).
+          const customerId: string | null = data.customerId ?? null;
+
+          // Navn: hvis det ikke ligger i lisens-dokumentet, lar vi det være null.
+          // (Kan senere hentes via customers/{customerId} om vi ønsker.)
+          const customerName: string | null =
+            data.customerName ?? data.name ?? null;
+
           return {
             id: docSnap.id,
-            email: data.email ?? null,
-            customerName: data.customerName ?? data.name ?? null,
+            email,
+            customerName,
+            customerId,
             product: data.product ?? data.productId ?? null,
 
             licenseType,
@@ -174,7 +213,7 @@ const LicensesPage: React.FC = () => {
             createdAt: getDate(data.createdAt),
             updatedAt: getDate(data.updatedAt),
 
-            source: data.source ?? null,
+            source: data.source ?? null
           };
         });
 
@@ -241,10 +280,7 @@ const LicensesPage: React.FC = () => {
                 <span className="admin-col-date">
                   {formatDateTime(lic.startsAt || lic.createdAt)}
                 </span>
-                <span className="admin-col-from">
-                  {lic.customerName || "Ukjent"}{" "}
-                  {lic.email ? <span>· {lic.email}</span> : null}
-                </span>
+                <span className="admin-col-from">{renderCustomer(lic)}</span>
                 <span className="admin-col-text">
                   <span className="license-badge license-badge-trial">
                     PRØVE
@@ -293,10 +329,7 @@ const LicensesPage: React.FC = () => {
                 <span className="admin-col-date">
                   {formatDateTime(lic.startsAt || lic.createdAt)}
                 </span>
-                <span className="admin-col-from">
-                  {lic.customerName || "Ukjent"}{" "}
-                  {lic.email ? <span>· {lic.email}</span> : null}
-                </span>
+                <span className="admin-col-from">{renderCustomer(lic)}</span>
                 <span className="admin-col-text">
                   <span className="license-badge license-badge-paid">
                     BETALT
