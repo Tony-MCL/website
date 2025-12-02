@@ -3,13 +3,20 @@ import { Link } from "react-router-dom";
 import { useAdminCounts } from "../utils/useAdminCounts";
 
 const AdminPage: React.FC = () => {
-  const { ideas, messages, licenses, loading, error } = useAdminCounts();
+  const {
+    ideas,
+    messages,
+    licenses,
+    trialSignups,
+    loading,
+    error,
+  } = useAdminCounts();
 
   return (
     <main className="page admin-page">
       <section className="admin-header">
         <h1>Admin</h1>
-        <p>Oversikt over innsendte idéer, meldinger og lisensstatus.</p>
+        <p>Oversikt over innsendte idéer, meldinger, lisenser og prøveperioder.</p>
       </section>
 
       {error && <p className="admin-error">{error}</p>}
@@ -17,9 +24,7 @@ const AdminPage: React.FC = () => {
       <section className="admin-stats">
         <div className="admin-stat-card">
           <h3>Idéer</h3>
-          <p className="admin-stat-number">
-            {loading ? "…" : ideas}
-          </p>
+          <p className="admin-stat-number">{loading ? "…" : ideas}</p>
           <Link to="/admin/meldinger" className="admin-stat-link">
             Se idéer →
           </Link>
@@ -27,9 +32,7 @@ const AdminPage: React.FC = () => {
 
         <div className="admin-stat-card">
           <h3>Meldinger</h3>
-          <p className="admin-stat-number">
-            {loading ? "…" : messages}
-          </p>
+          <p className="admin-stat-number">{loading ? "…" : messages}</p>
           <Link to="/admin/meldinger" className="admin-stat-link">
             Se meldinger →
           </Link>
@@ -37,11 +40,19 @@ const AdminPage: React.FC = () => {
 
         <div className="admin-stat-card">
           <h3>Lisenser</h3>
-          <p className="admin-stat-number">
-            {loading ? "…" : licenses}
-          </p>
+          <p className="admin-stat-number">{loading ? "…" : licenses}</p>
           <Link to="/admin/lisenser" className="admin-stat-link">
             Se lisenser →
+          </Link>
+        </div>
+
+        <div className="admin-stat-card">
+          <h3>Prøveperioder</h3>
+          <p className="admin-stat-number">
+            {loading ? "…" : trialSignups}
+          </p>
+          <Link to="/admin/lisenser" className="admin-stat-link">
+            Se prøveperioder →
           </Link>
         </div>
       </section>
@@ -57,7 +68,7 @@ const AdminPage: React.FC = () => {
             <Link to="/admin/lisenser">Lisenser</Link>
           </li>
           <li>
-            <Link to="/admin/meldinger">Meldinger</Link>
+            <Link to="/admin/meldinger">Meldinger & idéer</Link>
           </li>
           <li>
             <Link to="/admin/statistikk">Statistikk</Link>
