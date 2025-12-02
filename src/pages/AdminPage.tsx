@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAdminCounts } from "../utils/useAdminCounts";
 
 const AdminPage: React.FC = () => {
   const { ideas, messages, licenses, loading, error } = useAdminCounts();
