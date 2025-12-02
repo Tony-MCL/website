@@ -19,16 +19,16 @@ import AdminPage from "./pages/AdminPage";
 import SuccessPage from "./pages/SuccessPage";
 import CancelPage from "./pages/CancelPage";
 
-import KjopsvilkarPage from "./pages/KjopsvilkarPage";
-import PersonvernPage from "./pages/PersonvernPage";
-import BrukervilkarPage from "./pages/BrukervilkarPage";
-import RefusjonPage from "./pages/RefusjonPage";
-
 import Dashboard from "./admin/Dashboard";
 import CustomersPage from "./admin/CustomersPage";
 import LicensesPage from "./admin/LicensesPage";
 import MessagesPage from "./admin/MessagesPage";
 import StatsPage from "./admin/StatsPage";
+
+// NYE sider
+import KjopsvilkarPage from "./pages/KjopsvilkarPage";
+import BrukervilkarPage from "./pages/BrukervilkarPage";
+import PersonvernPage from "./pages/PersonvernPage";
 
 const App: React.FC = () => {
   return (
@@ -47,19 +47,14 @@ const App: React.FC = () => {
             <Route path="/idebank" element={<IdeaBankPage />} />
             <Route path="/om" element={<AboutPage />} />
             <Route path="/kontakt" element={<ContactPage />} />
+            <Route path="/success" element={<SuccessPage />} />
+            <Route path="/cancel" element={<CancelPage />} />
 
             {/* Juridiske sider */}
             <Route path="/kjopsvilkar" element={<KjopsvilkarPage />} />
-            <Route path="/personvern" element={<PersonvernPage />} />
             <Route path="/brukervilkar" element={<BrukervilkarPage />} />
-            <Route path="/refusjon" element={<RefusjonPage />} />
+            <Route path="/personvern" element={<PersonvernPage />} />
 
-            {/* Lisens-flyt */}
-            <Route path="/success" element={<SuccessPage />} />
-            <Route path="/lisens/success" element={<SuccessPage />} />
-            <Route path="/cancel" element={<CancelPage />} />
-
-            {/* Admin-ruter */}
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/kunder" element={<CustomersPage />} />
