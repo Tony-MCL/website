@@ -2,58 +2,75 @@ import { useEffect, useState } from "react";
 import { collection, getCountFromServer } from "firebase/firestore";
 import { db } from "../firebase";
 
-type AdminCounts = {
-  ideas: number;
-  messages: number;
-  licenses: number;
-};
-
 export const useAdminCounts = () => {
   const [ideas, setIdeas] = useState<number>(0);
   const [messages, setMessages] = useState<number>(0);
   const [licenses, setLicenses] = useState<number>(0);
+  const [trialSignups, setTrialSignups] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadCounts = async () => {
+    const load = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const [ideasSnap, messagesSnap, licensesSnap] = await Promise.all([
-          getCountFromServer(collection(db, "ideas")),
-          getCountFromServer(collection(db, "contactMessages")),
-          getCountFromServer(collection(db, "licenses")),
-        ]);
+        // Idéer
+        const ideasSnap = await getCountFromServer(collection(db, "ideas"));
+        const ideasCount = ideasSnap.data().count || 0;
 
-        const counts: AdminCounts = {
-          ideas: ideasSnap.data().count || 0,
-          messages: messagesSnap.data().count || 0,
-          licenses: licensesSnap.data().count || 0,
-        };
+        // Meldinger (samme collection som MessagesPage bruker)
+        const messagesSnap = await getCountFromServer(
+          collection(db, "messages")
+        );
+        const messagesCount = messagesSnap.data().count || 0;
 
-        setIdeas(counts.ideas);
-        setMessages(counts.messages);
-        setLicenses(counts.licenses);
+        // Lisenser (kan være tom/ikke i bruk ennå)
+        let licenseCount = 0;
+        try {
+          const licSnap = await getCountFromServer(collection(db, "licenses"));
+          licenseCount = licSnap.data().count || 0;
+        } catch (err) {
+          console.warn("Kunne ikke hente licenses-count:", err);
+          licenseCount = 0;
+        }
+
+        // Gratis prøveperioder (trialSignups fra Formelsamling)
+        let trialCount = 0;
+        try {
+          const trialSnap = await getCountFromServer(
+            collection(db, "trialSignups")
+          );
+          trialCount = trialSnap.data().count || 0;
+        } catch (err) {
+          console.warn("Kunne ikke hente trialSignups-count:", err);
+          trialCount = 0;
+        }
+
+        setIdeas(ideasCount);
+        setMessages(messagesCount);
+        setLicenses(licenseCount);
+        setTrialSignups(trialCount);
       } catch (err: any) {
         console.error("Feil i useAdminCounts:", err);
         setError(
           err?.message ||
-            "Kunne ikke hente tellere for admin. Sjekk konsollen for detaljer."
+            "Kunne ikke hente tall fra Firestore. Sjekk konsollen for detaljer."
         );
       } finally {
         setLoading(false);
       }
     };
 
-    loadCounts();
+    load();
   }, []);
 
   return {
     ideas,
     messages,
     licenses,
+    trialSignups,
     loading,
     error,
   };
