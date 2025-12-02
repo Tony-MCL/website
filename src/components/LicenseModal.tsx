@@ -84,7 +84,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
       return "Du må bekrefte at du har lest og akseptert vilkår og personvernerklæring.";
     }
     if (!acceptDelivery) {
-      return "Du må samtykke til umiddelbar levering og at angreretten bortfaller når lisensen aktiveres.";
+      return "Du må samtykke til umiddelbar aktivering og bortfall av angrerett.";
     }
 
     return null;
@@ -109,8 +109,8 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
   };
 
   const deliveryLabel = oneTimePurchase
-    ? "Jeg samtykker til at lisensen aktiveres umiddelbart, og at angreretten da bortfaller (Angrerettloven §22 n / EU Digital Content Directive)."
-    : "Jeg samtykker til at lisensen aktiveres umiddelbart, og at angreretten da bortfaller. Ved abonnement fornyes lisensen automatisk til jeg sier opp.";
+    ? "Jeg samtykker til at lisensen aktiveres umiddelbart, og at angreretten da bortfaller."
+    : "Jeg samtykker til at lisensen aktiveres umiddelbart, at angreretten bortfaller, og at abonnementet fornyes automatisk til jeg sier opp.";
 
   const handleBackdropClick = () => {
     if (!submitting) {
@@ -247,7 +247,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
         <form onSubmit={handleSubmit} className="form-grid">
           {step === 1 && (
             <>
-              {/* Lisensperiode – kort-bokser */}
+              {/* Lisensperiode – kort-kort */}
               <div className="form-row">
                 <div style={{ marginBottom: "0.4rem", fontWeight: 500 }}>
                   Lisensperiode *
@@ -291,15 +291,6 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                     <div style={{ fontSize: "0.9rem" }}>
                       NOK {NOK_PRICES.month},- / ca €{EUR_PRICES.month} per mnd
                     </div>
-                    <div
-                      style={{
-                        fontSize: "0.8rem",
-                        color: "var(--mcl-text-dim)",
-                        marginTop: 2,
-                      }}
-                    >
-                      Fleksibel lisens for testing og mindre team.
-                    </div>
                   </button>
 
                   <button
@@ -334,20 +325,11 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                     <div style={{ fontSize: "0.9rem" }}>
                       NOK {NOK_PRICES.year},- / ca €{EUR_PRICES.year} per år
                     </div>
-                    <div
-                      style={{
-                        fontSize: "0.8rem",
-                        color: "var(--mcl-text-dim)",
-                        marginTop: 2,
-                      }}
-                    >
-                      Lavere pris per måned for faste brukere.
-                    </div>
                   </button>
                 </div>
               </div>
 
-              {/* Modell – kort tekst */}
+              {/* Modell – kort og tydelig */}
               <div className="form-row">
                 <div
                   style={{
@@ -378,8 +360,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                   <span>
                     <strong>Engangslisens</strong> hvis avkrysset – ingen
                     automatisk fornyelse. Uten hake kjøpes lisensen som{" "}
-                    <strong>abonnement</strong> med automatisk fornyelse i
-                    valgt periode.
+                    <strong>abonnement</strong> med automatisk fornyelse.
                   </span>
                 </div>
               </div>
@@ -406,7 +387,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
 
           {step === 2 && (
             <>
-              {/* Kundetype – uten tittel, bare knapper */}
+              {/* Kundetype – kun knapper */}
               <div className="form-row">
                 <div
                   style={{
@@ -563,9 +544,22 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                     />
                     <span>
                       Jeg har lest og aksepterer{" "}
-                      <strong>Kjøpsvilkår</strong>,{" "}
-                      <strong>Brukervilkår</strong> og{" "}
-                      <strong>Personvernerklæring</strong>.
+                      <a href="/kjopsvilkar" target="_blank" rel="noreferrer">
+                        Kjøpsvilkår
+                      </a>
+                      ,{" "}
+                      <a href="/brukervilkår" target="_blank" rel="noreferrer">
+                        Brukervilkår
+                      </a>{" "}
+                      og{" "}
+                      <a
+                        href="/personvernerklaering"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Personvernerklæring
+                      </a>
+                      .
                     </span>
                   </label>
 
@@ -601,8 +595,8 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                       style={{ marginTop: "0.1rem" }}
                     />
                     <span>
-                      (Valgfritt) Jeg ønsker info om nye funksjoner og relaterte
-                      produkter fra Morning Coffee Labs.
+                      (Valgfritt) Jeg ønsker info om nye funksjoner og produkter
+                      fra Morning Coffee Labs.
                     </span>
                   </label>
                 </div>
@@ -649,10 +643,10 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
               type="button"
               className="admin-secondary-button"
               onClick={() => {
-                setStep(1);
-                setError(null);
-                onClose();
-              }}
+              setStep(1);
+              setError(null);
+              onClose();
+            }}
               disabled={submitting}
             >
               Avbryt
