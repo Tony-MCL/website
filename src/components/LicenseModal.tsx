@@ -29,7 +29,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
   );
   const [isOneTime, setIsOneTime] = useState(false);
 
-  // Kun to sjekkbokser:
+  // Kun to sjekkbokser
   const [checkedMain, setCheckedMain] = useState(false);
   const [checkedDelivery, setCheckedDelivery] = useState(false);
 
@@ -63,7 +63,6 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
     return "";
   };
 
-  // Tekst i boks #2 endres ut fra om det er abonnement eller engang
   const deliveryLabel = isOneTime
     ? "Jeg samtykker til umiddelbar levering og forstår at angreretten da bortfaller (Angrerettloven §22 n / EU Digital Content Directive)."
     : "Jeg samtykker til umiddelbar levering og forstår at angreretten da bortfaller (Angrerettloven §22 n / EU Digital Content Directive), og jeg godtar at lisensen fornyes automatisk med valgt periode inntil jeg selv avslutter abonnementet.";
@@ -78,7 +77,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
           lisensen aktiveres automatisk når du sendes tilbake til nettsiden.
         </p>
 
-        {/* --- PERIODEVALG: TO BOKSER --- */}
+        {/* Periodevalg */}
         <div
           className="fs-license-grid"
           style={{
@@ -115,7 +114,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
           </button>
         </div>
 
-        {/* --- ENGANG / ABONNEMENT --- */}
+        {/* Engang / abonnement */}
         <div
           className="fs-license-card"
           style={{
@@ -157,12 +156,11 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
           )}
         </div>
 
-        {/* --- VALGT MODELL --- */}
         <p style={{ marginBottom: "1rem", fontSize: "0.9rem" }}>
           <strong>Valgt modell:</strong> {renderSelectedText()}
         </p>
 
-        {/* --- TO JURIDISKE BOKSER --- */}
+        {/* To juridiske bokser */}
         <div className="fs-checklist">
           <div className="fs-checkitem">
             <label
@@ -180,10 +178,24 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                 style={{ marginTop: "0.18rem" }}
               />
               <span>
-                Jeg bekrefter at jeg har lest og aksepterer kjøpsvilkår og
-                personvernerklæring, og at Stripe behandler
-                betalingsinformasjonen min på vegne av Mathisens Morning Coffee
-                Labs.
+                Jeg bekrefter at jeg har lest og aksepterer{" "}
+                <a
+                  href="#/kjopsvilkar"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  kjøpsvilkårene
+                </a>{" "}
+                og{" "}
+                <a
+                  href="#/personvern"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  personvernerklæringen
+                </a>
+                , og at Stripe behandler betalingsinformasjonen min på vegne av
+                Mathisens Morning Coffee Labs.
               </span>
             </label>
           </div>
@@ -208,7 +220,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
           </div>
         </div>
 
-        {/* --- HANDLINGER --- */}
+        {/* Handlinger */}
         <div
           className="admin-modal-actions"
           style={{ marginTop: "1.5rem", display: "flex", gap: "0.7rem" }}
