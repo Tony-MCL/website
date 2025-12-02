@@ -28,6 +28,8 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
   product,
   productName,
 }) => {
+  const [step, setStep] = useState<1 | 2>(1);
+
   const [customerType, setCustomerType] = useState<CustomerType>("private");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -40,7 +42,6 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
   );
   const [oneTimePurchase, setOneTimePurchase] = useState(false);
 
-  // To juridiske sjekkbokser + én valgfri for markedsføring
   const [acceptMain, setAcceptMain] = useState(false);
   const [acceptDelivery, setAcceptDelivery] = useState(false);
   const [marketingOptIn, setMarketingOptIn] = useState(false);
@@ -48,7 +49,6 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Stripe-worker URL (tilpass navnet til det du faktisk bruker i .env)
   const workerUrl = import.meta.env.VITE_STRIPE_WORKER_URL as
     | string
     | undefined;
@@ -57,10 +57,19 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
 
   const autoRenew = !oneTimePurchase;
 
-  const validate = () => {
+  // --- HJELPEFUNKSJONER ---
+
+  const validateStep1 = (): string | null => {
+    if (!billingPeriod) return "Velg lisensperiode (måned eller år).";
+    return null;
+  };
+
+  const validateAll = (): string | null => {
+    const step1Error = validateStep1();
+    if (step1Error) return step1Error;
+
     if (!name.trim()) return "Navn må fylles ut.";
     if (!email.trim()) return "E-post må fylles ut.";
-    if (!billingPeriod) return "Velg lisensperiode (måned/år).";
 
     if (customerType === "business") {
       if (!companyName.trim()) {
@@ -72,7 +81,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
     }
 
     if (!acceptMain) {
-      return "Du må bekrefte at du har lest og akseptert kjøpsvilkår, brukervilkår og personvernerklæring.";
+      return "Du må bekrefte at du har lest og akseptert vilkår og personvernerklæring.";
     }
     if (!acceptDelivery) {
       return "Du må samtykke til umiddelbar levering og forstå at angreretten bortfaller når lisensen aktiveres.";
@@ -104,20 +113,39 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
     : "Jeg samtykker til umiddelbar levering og forstår at angreretten da bortfaller (Angrerettloven §22 n / EU Digital Content Directive), og jeg godtar at lisensen fornyes automatisk med valgt periode inntil jeg selv avslutter abonnementet.";
 
   const handleBackdropClick = () => {
-    if (!submitting) onClose();
+    if (!submitting) {
+      setStep(1);
+      setError(null);
+      onClose();
+    }
   };
 
   const handleInnerClick: React.MouseEventHandler<HTMLDivElement> = (e) =>
     e.stopPropagation();
 
+  const handleNext = () => {
+    const err = validateStep1();
+    if (err) {
+      setError(err);
+      return;
+    }
+    setError(null);
+    setStep(2);
+  };
+
+  const handleBack = () => {
+    setError(null);
+    setStep(1);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
 
-    setError(null);
-    const validationError = validate();
+    const validationError = validateAll();
     if (validationError) {
       setError(validationError);
+      if (step === 1) setStep(2); // skulle egentlig aldri skje, men for sikkerhet.
       return;
     }
 
@@ -133,6 +161,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
     }
 
     setSubmitting(true);
+    setError(null);
 
     try {
       // 1) Lagre kundedata i Firestore
@@ -185,7 +214,6 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
         throw new Error("Svar fra Stripe-worker mangler redirect-URL.");
       }
 
-      // 3) Send bruker til Stripe Checkout
       window.location.href = data.url as string;
     } catch (err: any) {
       console.error("Feil ved forberedelse av lisenskjøp:", err);
@@ -197,6 +225,8 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
     }
   };
 
+  // --- RENDER ---
+
   return (
     <div
       className="admin-modal-backdrop"
@@ -207,353 +237,377 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
       <div className="admin-modal" onClick={handleInnerClick}>
         <h2>Kjøp lisens – {productName}</h2>
 
+        {/* Enkel steg-indikator */}
         <p className="form-info" style={{ marginTop: 0 }}>
-          Fyll inn kundedetaljer, velg lisensmodell og bekreft vilkår. Deretter
-          sendes du til Stripe for sikker betaling. Lisensen aktiveres
-          automatisk når du kommer tilbake til nettsiden.
+          Steg {step} av 2 ·{" "}
+          {step === 1
+            ? "Velg lisensmodell."
+            : "Fyll inn kundeinformasjon og bekreft vilkår."}
         </p>
 
         <form onSubmit={handleSubmit} className="form-grid">
-          {/* Kundetype */}
-          <div className="form-row">
-            <label>
-              Kundetype <span className="required">*</span>
-            </label>
-            <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
-              <button
-                type="button"
-                onClick={() => setCustomerType("private")}
-                style={{
-                  padding: "0.35rem 0.9rem",
-                  borderRadius: 999,
-                  border:
-                    customerType === "private"
-                      ? "1px solid var(--mcl-accent-light)"
-                      : "1px solid var(--mcl-border)",
-                  background:
-                    customerType === "private"
-                      ? "rgba(196,139,65,0.2)"
-                      : "rgba(255,255,255,0.03)",
-                  color: "var(--mcl-text)",
-                  fontSize: "0.9rem",
-                  cursor: "pointer",
-                }}
-              >
-                Privatperson
-              </button>
-              <button
-                type="button"
-                onClick={() => setCustomerType("business")}
-                style={{
-                  padding: "0.35rem 0.9rem",
-                  borderRadius: 999,
-                  border:
-                    customerType === "business"
-                      ? "1px solid var(--mcl-accent-light)"
-                      : "1px solid var(--mcl-border)",
-                  background:
-                    customerType === "business"
-                      ? "rgba(196,139,65,0.2)"
-                      : "rgba(255,255,255,0.03)",
-                  color: "var(--mcl-text)",
-                  fontSize: "0.9rem",
-                  cursor: "pointer",
-                }}
-              >
-                Bedrift
-              </button>
-            </div>
-          </div>
-
-          {/* Grunnleggende info */}
-          <div className="form-row">
-            <label>
-              Navn <span className="required">*</span>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder={
-                  customerType === "private"
-                    ? "Fornavn og etternavn"
-                    : "Kontaktperson hos bedriften"
-                }
-                required
-              />
-            </label>
-          </div>
-
-          <div className="form-row">
-            <label>
-              E-post <span className="required">*</span>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="din@epost.no"
-                required
-              />
-            </label>
-          </div>
-
-          <div className="form-row">
-            <label>
-              Land (for fakturering)
-              <input
-                type="text"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                placeholder="Norge"
-              />
-            </label>
-          </div>
-
-          {customerType === "business" && (
+          {step === 1 && (
             <>
+              {/* Lisensperiode */}
               <div className="form-row">
                 <label>
-                  Selskapsnavn (påkrevd for bedrifter){" "}
-                  <span className="required">*</span>
-                  <input
-                    type="text"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="Firmanavn AS"
-                    required={customerType === "business"}
-                  />
+                  Lisensperiode <span className="required">*</span>
+                </label>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 4,
+                    marginTop: "0.3rem",
+                  }}
+                >
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "0.45rem",
+                      fontSize: "0.92rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="billingPeriod"
+                      value="month"
+                      checked={billingPeriod === "month"}
+                      onChange={() => setBillingPeriod("month")}
+                    />
+                    <span>
+                      <strong>Månedlig lisens</strong> — NOK {NOK_PRICES.month}
+                      ,- / ca €{EUR_PRICES.month} per måned
+                      <br />
+                      <span style={{ color: "var(--mcl-text-dim)" }}>
+                        Fleksibel lisens for testing og mindre team.
+                      </span>
+                    </span>
+                  </label>
+
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "0.45rem",
+                      fontSize: "0.92rem",
+                      cursor: "pointer",
+                      marginTop: "0.3rem",
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="billingPeriod"
+                      value="year"
+                      checked={billingPeriod === "year"}
+                      onChange={() => setBillingPeriod("year")}
+                    />
+                    <span>
+                      <strong>Årlig lisens</strong> — NOK {NOK_PRICES.year},- /
+                      ca €{EUR_PRICES.year} per år
+                      <br />
+                      <span style={{ color: "var(--mcl-text-dim)" }}>
+                        Redusert pris per måned for faste brukere og
+                        avdelinger.
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Modell */}
+              <div className="form-row">
+                <label>
+                  Modell
+                  <div
+                    style={{
+                      marginTop: "0.35rem",
+                      padding: "0.6rem 0.7rem",
+                      borderRadius: 10,
+                      border: "1px solid var(--mcl-border)",
+                      background: "rgba(255,255,255,0.02)",
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "0.45rem",
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={oneTimePurchase}
+                      onChange={(e) => setOneTimePurchase(e.target.checked)}
+                      style={{ marginTop: "0.15rem" }}
+                    />
+                    <span>
+                      Kjøp som <strong>engangslisens</strong> (ingen automatisk
+                      fornyelse). Når perioden er over, må du selv kjøpe ny
+                      lisens for å fortsette å bruke PRO-funksjonene. Uten hake
+                      kjøpes lisensen som <strong>abonnement</strong> med
+                      automatisk fornyelse i valgt periode.
+                    </span>
+                  </div>
                 </label>
               </div>
 
+              {/* Oppsummering */}
               <div className="form-row">
                 <label>
-                  Organisasjonsnummer / MVA-nummer{" "}
-                  <span className="required">*</span>
-                  <input
-                    type="text"
-                    value={orgNumber}
-                    onChange={(e) => setOrgNumber(e.target.value)}
-                    placeholder="Org.nr. (for eksempel 123 456 789)"
-                    required={customerType === "business"}
-                  />
+                  Valgt modell
+                  <div
+                    style={{
+                      marginTop: "0.35rem",
+                      padding: "0.5rem 0.7rem",
+                      borderRadius: 10,
+                      border: "1px solid var(--mcl-border)",
+                      background: "rgba(255,255,255,0.02)",
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    {renderSelectedSummary()}
+                  </div>
                 </label>
               </div>
             </>
           )}
 
-          {/* Lisensvalg */}
-          <div className="form-row">
-            <label>
-              Lisensperiode <span className="required">*</span>
-            </label>
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: "0.45rem",
-                  fontSize: "0.92rem",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="radio"
-                  name="billingPeriod"
-                  value="month"
-                  checked={billingPeriod === "month"}
-                  onChange={() => setBillingPeriod("month")}
-                />
-                <span>
-                  <strong>Månedlig lisens</strong> — NOK {NOK_PRICES.month},- /
-                  ca €{EUR_PRICES.month} per måned
-                  <br />
-                  <span style={{ color: "var(--mcl-text-dim)" }}>
-                    Fleksibel lisens for testing og mindre team.
-                  </span>
-                </span>
-              </label>
-
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: "0.45rem",
-                  fontSize: "0.92rem",
-                  cursor: "pointer",
-                  marginTop: "0.3rem",
-                }}
-              >
-                <input
-                  type="radio"
-                  name="billingPeriod"
-                  value="year"
-                  checked={billingPeriod === "year"}
-                  onChange={() => setBillingPeriod("year")}
-                />
-                <span>
-                  <strong>Årlig lisens</strong> — NOK {NOK_PRICES.year},- / ca €
-                  {EUR_PRICES.year} per år
-                  <br />
-                  <span style={{ color: "var(--mcl-text-dim)" }}>
-                    Redusert pris per måned for faste brukere og avdelinger.
-                  </span>
-                </span>
-              </label>
-            </div>
-          </div>
-
-          <div className="form-row">
-            <label>
-              Modell
-              <div
-                style={{
-                  marginTop: "0.35rem",
-                  padding: "0.6rem 0.7rem",
-                  borderRadius: 10,
-                  border: "1px solid var(--mcl-border)",
-                  background: "rgba(255,255,255,0.02)",
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: "0.45rem",
-                  fontSize: "0.9rem",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={oneTimePurchase}
-                  onChange={(e) => setOneTimePurchase(e.target.checked)}
-                  style={{ marginTop: "0.15rem" }}
-                />
-                <span>
-                  Kjøp som <strong>engangslisens</strong> (ingen automatisk
-                  fornyelse). Når perioden er over, må du selv kjøpe ny lisens
-                  for å fortsette å bruke PRO-funksjonene. Uten hake kjøpes
-                  lisensen som <strong>abonnement</strong> med automatisk
-                  fornyelse i valgt periode.
-                </span>
-              </div>
-            </label>
-          </div>
-
-          {/* Oppsummering */}
-          <div className="form-row">
-            <label>
-              Valgt modell
-              <div
-                style={{
-                  marginTop: "0.35rem",
-                  padding: "0.5rem 0.7rem",
-                  borderRadius: 10,
-                  border: "1px solid var(--mcl-border)",
-                  background: "rgba(255,255,255,0.02)",
-                  fontSize: "0.9rem",
-                }}
-              >
-                {renderSelectedSummary()}
-              </div>
-            </label>
-          </div>
-
-          {/* Samtykker */}
-          <div className="form-row">
-            <label>
-              Samtykker <span className="required">*</span>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.4rem",
-                  marginTop: "0.4rem",
-                  fontSize: "0.9rem",
-                }}
-              >
-                <label
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "0.4rem",
-                    cursor: "pointer",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={acceptMain}
-                    onChange={(e) => setAcceptMain(e.target.checked)}
-                    style={{ marginTop: "0.1rem" }}
-                  />
-                  <span>
-                    Jeg har lest og aksepterer{" "}
-                    <strong>Kjøpsvilkår</strong>,{" "}
-                    <strong>Brukervilkår</strong> og{" "}
-                    <strong>Personvernerklæring</strong> for digitale produkter
-                    fra Mathisens Morning Coffee Labs.
-                  </span>
+          {step === 2 && (
+            <>
+              {/* Kundetype */}
+              <div className="form-row">
+                <label>
+                  Kundetype <span className="required">*</span>
                 </label>
-
-                <label
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "0.4rem",
-                    cursor: "pointer",
-                  }}
+                <div
+                  style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}
                 >
-                  <input
-                    type="checkbox"
-                    checked={acceptDelivery}
-                    onChange={(e) => setAcceptDelivery(e.target.checked)}
-                    style={{ marginTop: "0.1rem" }}
-                  />
-                  <span>{deliveryLabel}</span>
-                </label>
+                  <button
+                    type="button"
+                    onClick={() => setCustomerType("private")}
+                    style={{
+                      padding: "0.35rem 0.9rem",
+                      borderRadius: 999,
+                      border:
+                        customerType === "private"
+                          ? "1px solid var(--mcl-accent-light)"
+                          : "1px solid var(--mcl-border)",
+                      background:
+                        customerType === "private"
+                          ? "rgba(196,139,65,0.2)"
+                          : "rgba(255,255,255,0.03)",
+                      color: "var(--mcl-text)",
+                      fontSize: "0.9rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Privatperson
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCustomerType("business")}
+                    style={{
+                      padding: "0.35rem 0.9rem",
+                      borderRadius: 999,
+                      border:
+                        customerType === "business"
+                          ? "1px solid var(--mcl-accent-light)"
+                          : "1px solid var(--mcl-border)",
+                      background:
+                        customerType === "business"
+                          ? "rgba(196,139,65,0.2)"
+                          : "rgba(255,255,255,0.03)",
+                      color: "var(--mcl-text)",
+                      fontSize: "0.9rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Bedrift
+                  </button>
+                </div>
+              </div>
 
-                <label
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "0.4rem",
-                    cursor: "pointer",
-                  }}
-                >
+              {/* Grunnleggende info */}
+              <div className="form-row">
+                <label>
+                  Navn <span className="required">*</span>
                   <input
-                    type="checkbox"
-                    checked={marketingOptIn}
-                    onChange={(e) => setMarketingOptIn(e.target.checked)}
-                    style={{ marginTop: "0.1rem" }}
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder={
+                      customerType === "private"
+                        ? "Fornavn og etternavn"
+                        : "Kontaktperson hos bedriften"
+                    }
+                    required
                   />
-                  <span>
-                    (Valgfritt) Jeg ønsker å motta informasjon om nye funksjoner
-                    og relaterte produkter fra Morning Coffee Labs.
-                  </span>
                 </label>
               </div>
-            </label>
-          </div>
 
-          {/* Selgerinformasjon */}
-          <div className="form-row">
-            <label>
-              Selger
-              <div
-                style={{
-                  marginTop: "0.35rem",
-                  padding: "0.6rem 0.7rem",
-                  borderRadius: 10,
-                  border: "1px solid var(--mcl-border)",
-                  background: "rgba(255,255,255,0.02)",
-                  fontSize: "0.85rem",
-                  color: "var(--mcl-text-dim)",
-                  lineHeight: 1.5,
-                }}
-              >
-                <strong>Mathisens Morning Coffee Labs</strong>
-                <br />
-                Norge
-                <br />
-                (organisasjonsnummer og full juridisk info fylles inn før
-                lansering)
+              <div className="form-row">
+                <label>
+                  E-post <span className="required">*</span>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="din@epost.no"
+                    required
+                  />
+                </label>
               </div>
-            </label>
-          </div>
+
+              <div className="form-row">
+                <label>
+                  Land (for fakturering)
+                  <input
+                    type="text"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    placeholder="Norge"
+                  />
+                </label>
+              </div>
+
+              {customerType === "business" && (
+                <>
+                  <div className="form-row">
+                    <label>
+                      Selskapsnavn{" "}
+                      <span className="required">*</span>
+                      <input
+                        type="text"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        placeholder="Firmanavn AS"
+                        required={customerType === "business"}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="form-row">
+                    <label>
+                      Organisasjonsnummer / MVA-nummer{" "}
+                      <span className="required">*</span>
+                      <input
+                        type="text"
+                        value={orgNumber}
+                        onChange={(e) => setOrgNumber(e.target.value)}
+                        placeholder="Org.nr. (for eksempel 123 456 789)"
+                        required={customerType === "business"}
+                      />
+                    </label>
+                  </div>
+                </>
+              )}
+
+              {/* Samtykker */}
+              <div className="form-row">
+                <label>
+                  Samtykker <span className="required">*</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "0.4rem",
+                      marginTop: "0.4rem",
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    <label
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: "0.4rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={acceptMain}
+                        onChange={(e) => setAcceptMain(e.target.checked)}
+                        style={{ marginTop: "0.1rem" }}
+                      />
+                      <span>
+                        Jeg har lest og aksepterer{" "}
+                        <strong>Kjøpsvilkår</strong>,{" "}
+                        <strong>Brukervilkår</strong> og{" "}
+                        <strong>Personvernerklæring</strong> for digitale
+                        produkter fra Mathisens Morning Coffee Labs.
+                      </span>
+                    </label>
+
+                    <label
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: "0.4rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={acceptDelivery}
+                        onChange={(e) =>
+                          setAcceptDelivery(e.target.checked)
+                        }
+                        style={{ marginTop: "0.1rem" }}
+                      />
+                      <span>{deliveryLabel}</span>
+                    </label>
+
+                    <label
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: "0.4rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={marketingOptIn}
+                        onChange={(e) => setMarketingOptIn(e.target.checked)}
+                        style={{ marginTop: "0.1rem" }}
+                      />
+                      <span>
+                        (Valgfritt) Jeg ønsker å motta informasjon om nye
+                        funksjoner og relaterte produkter fra Morning Coffee
+                        Labs.
+                      </span>
+                    </label>
+                  </div>
+                </label>
+              </div>
+
+              {/* Selgerinformasjon */}
+              <div className="form-row">
+                <label>
+                  Selger
+                  <div
+                    style={{
+                      marginTop: "0.35rem",
+                      padding: "0.6rem 0.7rem",
+                      borderRadius: 10,
+                      border: "1px solid var(--mcl-border)",
+                      background: "rgba(255,255,255,0.02)",
+                      fontSize: "0.85rem",
+                      color: "var(--mcl-text-dim)",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    <strong>Mathisens Morning Coffee Labs</strong>
+                    <br />
+                    Norge
+                    <br />
+                    (organisasjonsnummer og full juridisk info fylles inn før
+                    lansering)
+                  </div>
+                </label>
+              </div>
+            </>
+          )}
 
           {error && <p className="form-error">{error}</p>}
 
@@ -561,18 +615,45 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
             <button
               type="button"
               className="admin-secondary-button"
-              onClick={onClose}
+              onClick={() => {
+                setStep(1);
+                setError(null);
+                onClose();
+              }}
               disabled={submitting}
             >
               Avbryt
             </button>
-            <button
-              type="submit"
-              className="checkout-button"
-              disabled={submitting}
-            >
-              {submitting ? "Forbereder betaling…" : "Gå til betaling"}
-            </button>
+
+            {step === 1 && (
+              <button
+                type="button"
+                className="checkout-button"
+                onClick={handleNext}
+              >
+                Neste
+              </button>
+            )}
+
+            {step === 2 && (
+              <>
+                <button
+                  type="button"
+                  className="admin-secondary-button"
+                  onClick={handleBack}
+                  disabled={submitting}
+                >
+                  Tilbake
+                </button>
+                <button
+                  type="submit"
+                  className="checkout-button"
+                  disabled={submitting}
+                >
+                  {submitting ? "Forbereder betaling…" : "Gå til betaling"}
+                </button>
+              </>
+            )}
           </div>
         </form>
       </div>
