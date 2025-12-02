@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../src/firebase";
+import { db } from "../firebase";
 
 export const useAdminCounts = () => {
   const [loading, setLoading] = useState(true);
