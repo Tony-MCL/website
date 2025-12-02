@@ -99,7 +99,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
       return;
     }
     if (!billingPeriod) {
-      setError("Lisensperiode mangler.";
+      setError("Lisensperiode mangler.");
       return;
     }
 
