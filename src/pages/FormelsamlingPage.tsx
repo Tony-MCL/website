@@ -1,10 +1,8 @@
-// src/pages/FormelsamlingPage.tsx
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import LicensePurchaseModal from "../components/LicensePurchaseModal";
+import LicenseModal from "../components/LicenseModal";
 
 const FormelsamlingPage: React.FC = () => {
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [showLicenseModal, setShowLicenseModal] = useState(false);
 
   return (
     <main className="page formelsamling-page">
@@ -96,7 +94,7 @@ const FormelsamlingPage: React.FC = () => {
               <button
                 type="button"
                 className="checkout-button"
-                onClick={() => setShowPurchaseModal(true)}
+                onClick={() => setShowLicenseModal(true)}
               >
                 Kjøp lisens
               </button>
@@ -137,40 +135,12 @@ const FormelsamlingPage: React.FC = () => {
         </aside>
       </section>
 
-      {/* Gratis vs lisensiert */}
-      <section className="fs-access">
-        <h2>Gratis innhold og lisensiert funksjon</h2>
-        <p className="fs-access-text">
-          Tanken er å kombinere åpen tilgang på en del innhold med lisensiert
-          funksjonalitet for mer avanserte moduler og eksport.
-        </p>
-
-        <div className="fs-access-grid">
-          <div className="fs-access-card">
-            <h3>Åpen tilgang</h3>
-            <ul>
-              <li>Enkel tilgang til utvalgte formler og oppsett</li>
-              <li>Mulighet til å teste arbeidsflyten før kjøp</li>
-            </ul>
-          </div>
-
-          <div className="fs-access-card">
-            <h3>Lisensiert innhold</h3>
-            <ul>
-              <li>Flere moduler og avanserte beregninger</li>
-              <li>Planlagt eksport og rapporter</li>
-              <li>Videreutvikling med fokus på kraft og industri</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
       {/* Lisenskjøp-modal */}
-      <LicensePurchaseModal
-        productId="formelsamling"
+      <LicenseModal
+        open={showLicenseModal}
+        onClose={() => setShowLicenseModal(false)}
+        product="formelsamling"
         productName="Formelsamling – MCL Edition"
-        isOpen={showPurchaseModal}
-        onClose={() => setShowPurchaseModal(false)}
       />
     </main>
   );
