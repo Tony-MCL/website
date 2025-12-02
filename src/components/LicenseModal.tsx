@@ -12,12 +12,12 @@ type LicenseModalProps = {
 type CustomerType = "private" | "business";
 type BillingPeriod = "month" | "year";
 
-const NOK_PRICES = {
+const NOK_PRICES: Record<BillingPeriod, number> = {
   month: 49,
   year: 490,
 };
 
-const EUR_PRICES = {
+const EUR_PRICES: Record<BillingPeriod, number> = {
   month: 4.5,
   year: 45,
 };
@@ -63,8 +63,11 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
     if (!billingPeriod) return "Velg lisensperiode (måned/år).";
 
     if (customerType === "business") {
-      if (!companyName.trim() && !orgNumber.trim()) {
-        return "For bedrifter bør minst enten selskapsnavn eller organisasjonsnummer fylles ut.";
+      if (!companyName.trim()) {
+        return "For bedrifter må selskapsnavn fylles ut.";
+      }
+      if (!orgNumber.trim()) {
+        return "For bedrifter må organisasjonsnummer/MVA-nummer fylles ut.";
       }
     }
 
@@ -85,10 +88,12 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
     const eur = EUR_PRICES[billingPeriod];
 
     if (oneTimePurchase) {
-      const label = billingPeriod === "month" ? "Engangslisens – 1 mnd" : "Engangslisens – 1 år";
+      const label =
+        billingPeriod === "month" ? "Engangslisens – 1 mnd" : "Engangslisens – 1 år";
       return `${label} · NOK ${nok},- · ca €${eur}`;
     } else {
-      const label = billingPeriod === "month" ? "Abonnement – månedlig" : "Abonnement – årlig";
+      const label =
+        billingPeriod === "month" ? "Abonnement – månedlig" : "Abonnement – årlig";
       const suffix = billingPeriod === "month" ? "/ mnd" : "/ år";
       return `${label} · NOK ${nok},- ${suffix} · ca €${eur} ${suffix}`;
     }
@@ -137,9 +142,9 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
         email: email.trim(),
         country: country.trim() || null,
         companyName:
-          customerType === "business" ? companyName.trim() || null : null,
+          customerType === "business" ? companyName.trim() : null,
         orgNumber:
-          customerType === "business" ? orgNumber.trim() || null : null,
+          customerType === "business" ? orgNumber.trim() : null,
         product,
         productName,
         billingPeriod,
@@ -307,24 +312,28 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
             <>
               <div className="form-row">
                 <label>
-                  Selskapsnavn (valgfritt, men anbefalt)
+                  Selskapsnavn (påkrevd for bedrifter){" "}
+                  <span className="required">*</span>
                   <input
                     type="text"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                     placeholder="Firmanavn AS"
+                    required={customerType === "business"}
                   />
                 </label>
               </div>
 
               <div className="form-row">
                 <label>
-                  Organisasjonsnummer (valgfritt, men anbefalt)
+                  Organisasjonsnummer / MVA-nummer{" "}
+                  <span className="required">*</span>
                   <input
                     type="text"
                     value={orgNumber}
                     onChange={(e) => setOrgNumber(e.target.value)}
                     placeholder="Org.nr. (for eksempel 123 456 789)"
+                    required={customerType === "business"}
                   />
                 </label>
               </div>
