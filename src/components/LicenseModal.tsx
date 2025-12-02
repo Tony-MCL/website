@@ -5,8 +5,8 @@ import { db } from "../firebase";
 type LicenseModalProps = {
   open: boolean;
   onClose: () => void;
-  product: string;      // f.eks. "formelsamling"
-  productName: string;  // f.eks. "Formelsamling – MCL Edition"
+  product: string; // f.eks. "formelsamling"
+  productName: string; // f.eks. "Formelsamling – MCL Edition"
 };
 
 type CustomerType = "private" | "business";
@@ -42,8 +42,6 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
   );
   const [oneTimePurchase, setOneTimePurchase] = useState(false);
 
-  const [acceptMain, setAcceptMain] = useState(false);
-  const [acceptDelivery, setAcceptDelivery] = useState(false);
   const [marketingOptIn, setMarketingOptIn] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
@@ -80,37 +78,8 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
       }
     }
 
-    if (!acceptMain) {
-      return "Du må bekrefte at du har lest og akseptert vilkår og personvernerklæring.";
-    }
-    if (!acceptDelivery) {
-      return "Du må samtykke til umiddelbar aktivering og bortfall av angrerett.";
-    }
-
     return null;
   };
-
-  const renderSelectedSummary = () => {
-    if (!billingPeriod) return "Ingen modell valgt.";
-
-    const nok = NOK_PRICES[billingPeriod];
-    const eur = EUR_PRICES[billingPeriod];
-
-    if (oneTimePurchase) {
-      const label =
-        billingPeriod === "month" ? "Engangslisens – 1 mnd" : "Engangslisens – 1 år";
-      return `${label} · NOK ${nok},- · ca €${eur}`;
-    } else {
-      const label =
-        billingPeriod === "month" ? "Abonnement – månedlig" : "Abonnement – årlig";
-      const suffix = billingPeriod === "month" ? "/ mnd" : "/ år";
-      return `${label} · NOK ${nok},- ${suffix} · ca €${eur} ${suffix}`;
-    }
-  };
-
-  const deliveryLabel = oneTimePurchase
-    ? "Jeg samtykker til at lisensen aktiveres umiddelbart, og at angreretten da bortfaller."
-    : "Jeg samtykker til at lisensen aktiveres umiddelbart, at angreretten bortfaller, og at abonnementet fornyes automatisk til jeg sier opp.";
 
   const handleBackdropClick = () => {
     if (!submitting) {
@@ -179,8 +148,9 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
         billingPeriod,
         billingModel: oneTimePurchase ? "one_time" : "subscription",
         autoRenew,
-        acceptMain,
-        acceptDelivery,
+        // Disse antas akseptert ved å klikke "Bekreft"
+        acceptMain: true,
+        acceptDelivery: true,
         marketingOptIn,
         createdAt: serverTimestamp(),
         source: "website",
@@ -247,7 +217,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
         <form onSubmit={handleSubmit} className="form-grid">
           {step === 1 && (
             <>
-              {/* Lisensperiode – kort-kort */}
+              {/* Lisensperiode – kort-knapper */}
               <div className="form-row">
                 <div style={{ marginBottom: "0.4rem", fontWeight: 500 }}>
                   Lisensperiode *
@@ -277,6 +247,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                           : "rgba(255,255,255,0.03)",
                       textAlign: "left",
                       cursor: "pointer",
+                      color: "var(--mcl-text)",
                     }}
                   >
                     <div
@@ -311,6 +282,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                           : "rgba(255,255,255,0.03)",
                       textAlign: "left",
                       cursor: "pointer",
+                      color: "var(--mcl-text)",
                     }}
                   >
                     <div
@@ -329,7 +301,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                 </div>
               </div>
 
-              {/* Modell – kort og tydelig */}
+              {/* Modell – kort tekst */}
               <div className="form-row">
                 <div
                   style={{
@@ -357,29 +329,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                     onChange={(e) => setOneTimePurchase(e.target.checked)}
                     style={{ marginTop: "0.15rem" }}
                   />
-                  <span>
-                    <strong>Engangslisens</strong> hvis avkrysset – ingen
-                    automatisk fornyelse. Uten hake kjøpes lisensen som{" "}
-                    <strong>abonnement</strong> med automatisk fornyelse.
-                  </span>
-                </div>
-              </div>
-
-              {/* Oppsummering */}
-              <div className="form-row">
-                <div style={{ marginBottom: "0.35rem", fontWeight: 500 }}>
-                  Valgt modell
-                </div>
-                <div
-                  style={{
-                    padding: "0.45rem 0.7rem",
-                    borderRadius: 10,
-                    border: "1px solid var(--mcl-border)",
-                    background: "rgba(255,255,255,0.02)",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  {renderSelectedSummary()}
+                  <span>Marker her for å kjøpe uten automatisk fornyelse.</span>
                 </div>
               </div>
             </>
@@ -442,10 +392,19 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                 </div>
               </div>
 
-              {/* Grunnleggende info */}
+              {/* Navn */}
               <div className="form-row">
-                <label>
-                  Navn *
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <label style={{ fontWeight: 500, minWidth: "6rem" }}>
+                    Navn *
+                  </label>
                   <input
                     type="text"
                     value={name}
@@ -456,61 +415,105 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                         : "Kontaktperson hos bedriften"
                     }
                     required
+                    style={{ flex: 1, minWidth: "0" }}
                   />
-                </label>
+                </div>
               </div>
 
+              {/* E-post */}
               <div className="form-row">
-                <label>
-                  E-post *
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <label style={{ fontWeight: 500, minWidth: "6rem" }}>
+                    E-post *
+                  </label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="din@epost.no"
                     required
+                    style={{ flex: 1, minWidth: "0" }}
                   />
-                </label>
+                </div>
               </div>
 
+              {/* Land */}
               <div className="form-row">
-                <label>
-                  Land (for fakturering)
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <label style={{ fontWeight: 500, minWidth: "6rem" }}>
+                    Land
+                  </label>
                   <input
                     type="text"
                     value={country}
                     onChange={(e) => setCountry(e.target.value)}
                     placeholder="Norge"
+                    style={{ flex: 1, minWidth: "0" }}
                   />
-                </label>
+                </div>
               </div>
 
+              {/* Bedriftsfelt */}
               {customerType === "business" && (
                 <>
                   <div className="form-row">
-                    <label>
-                      Selskapsnavn *
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.75rem",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <label style={{ fontWeight: 500, minWidth: "6rem" }}>
+                        Selskapsnavn *
+                      </label>
                       <input
                         type="text"
                         value={companyName}
                         onChange={(e) => setCompanyName(e.target.value)}
                         placeholder="Firmanavn AS"
                         required={customerType === "business"}
+                        style={{ flex: 1, minWidth: "0" }}
                       />
-                    </label>
+                    </div>
                   </div>
 
                   <div className="form-row">
-                    <label>
-                      Organisasjonsnummer / MVA-nummer *
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.75rem",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <label style={{ fontWeight: 500, minWidth: "6rem" }}>
+                        Org.nr / MVA *
+                      </label>
                       <input
                         type="text"
                         value={orgNumber}
                         onChange={(e) => setOrgNumber(e.target.value)}
-                        placeholder="Org.nr. (for eksempel 123 456 789)"
+                        placeholder="For eksempel 123 456 789"
                         required={customerType === "business"}
+                        style={{ flex: 1, minWidth: "0" }}
                       />
-                    </label>
+                    </div>
                   </div>
                 </>
               )}
@@ -528,62 +531,36 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                     fontSize: "0.9rem",
                   }}
                 >
-                  <label
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: "0.4rem",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={acceptMain}
-                      onChange={(e) => setAcceptMain(e.target.checked)}
-                      style={{ marginTop: "0.1rem" }}
-                    />
-                    <span>
-                      Jeg har lest og aksepterer{" "}
-                      <a href="/kjopsvilkar" target="_blank" rel="noreferrer">
-                        Kjøpsvilkår
-                      </a>
-                      ,{" "}
-                      <a href="/brukervilkår" target="_blank" rel="noreferrer">
-                        Brukervilkår
-                      </a>{" "}
-                      og{" "}
-                      <a
-                        href="/personvernerklaering"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Personvernerklæring
-                      </a>
-                      .
-                    </span>
-                  </label>
+                  <p style={{ margin: 0 }}>
+                    Ved å klikke <strong>Bekreft</strong> bekrefter jeg at jeg
+                    har lest og aksepterer{" "}
+                    <a href="/kjopsvilkar" target="_blank" rel="noreferrer">
+                      Kjøpsvilkår
+                    </a>
+                    ,{" "}
+                    <a href="/brukervilkår" target="_blank" rel="noreferrer">
+                      Brukervilkår
+                    </a>{" "}
+                    og{" "}
+                    <a
+                      href="/personvernerklaering"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Personvernerklæring
+                    </a>
+                    .
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    Jeg bekrefter også at lisensen aktiveres umiddelbart, at
+                    angreretten bortfaller, og at eventuell abonnementsbetaling
+                    fornyes automatisk til jeg sier opp.
+                  </p>
 
                   <label
                     style={{
                       display: "flex",
-                      alignItems: "flex-start",
-                      gap: "0.4rem",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={acceptDelivery}
-                      onChange={(e) => setAcceptDelivery(e.target.checked)}
-                      style={{ marginTop: "0.1rem" }}
-                    />
-                    <span>{deliveryLabel}</span>
-                  </label>
-
-                  <label
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
+                      alignItems: "center",
                       gap: "0.4rem",
                       cursor: "pointer",
                     }}
@@ -592,7 +569,6 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                       type="checkbox"
                       checked={marketingOptIn}
                       onChange={(e) => setMarketingOptIn(e.target.checked)}
-                      style={{ marginTop: "0.1rem" }}
                     />
                     <span>
                       (Valgfritt) Jeg ønsker info om nye funksjoner og produkter
@@ -643,10 +619,10 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
               type="button"
               className="admin-secondary-button"
               onClick={() => {
-              setStep(1);
-              setError(null);
-              onClose();
-            }}
+                setStep(1);
+                setError(null);
+                onClose();
+              }}
               disabled={submitting}
             >
               Avbryt
@@ -677,7 +653,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                   className="checkout-button"
                   disabled={submitting}
                 >
-                  {submitting ? "Forbereder betaling…" : "Gå til betaling"}
+                  {submitting ? "Forbereder …" : "Bekreft"}
                 </button>
               </>
             )}
