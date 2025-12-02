@@ -18,7 +18,11 @@ import ContactPage from "./pages/ContactPage";
 import AdminPage from "./pages/AdminPage";
 import SuccessPage from "./pages/SuccessPage";
 import CancelPage from "./pages/CancelPage";
-import LicenseStartPage from "./pages/LicenseStartPage";
+
+import KjopsvilkarPage from "./pages/KjopsvilkarPage";
+import PersonvernPage from "./pages/PersonvernPage";
+import BrukervilkarPage from "./pages/BrukervilkarPage";
+import RefusjonPage from "./pages/RefusjonPage";
 
 import Dashboard from "./admin/Dashboard";
 import CustomersPage from "./admin/CustomersPage";
@@ -44,11 +48,15 @@ const App: React.FC = () => {
             <Route path="/om" element={<AboutPage />} />
             <Route path="/kontakt" element={<ContactPage />} />
 
+            {/* Juridiske sider */}
+            <Route path="/kjopsvilkar" element={<KjopsvilkarPage />} />
+            <Route path="/personvern" element={<PersonvernPage />} />
+            <Route path="/brukervilkar" element={<BrukervilkarPage />} />
+            <Route path="/refusjon" element={<RefusjonPage />} />
+
             {/* Lisens-flyt */}
             <Route path="/success" element={<SuccessPage />} />
             <Route path="/lisens/success" element={<SuccessPage />} />
-            <Route path="/lisens/start" element={<LicenseStartPage />} />
-
             <Route path="/cancel" element={<CancelPage />} />
 
             {/* Admin-ruter */}
@@ -59,7 +67,6 @@ const App: React.FC = () => {
             <Route path="/admin/meldinger" element={<MessagesPage />} />
             <Route path="/admin/statistikk" element={<StatsPage />} />
 
-            {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
