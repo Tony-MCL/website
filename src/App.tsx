@@ -42,7 +42,11 @@ const App: React.FC = () => {
             <Route path="/idebank" element={<IdeaBankPage />} />
             <Route path="/om" element={<AboutPage />} />
             <Route path="/kontakt" element={<ContactPage />} />
+
+            {/* Lisens-suksess (begge adresser peker hit) */}
             <Route path="/success" element={<SuccessPage />} />
+            <Route path="/lisens/success" element={<SuccessPage />} />
+
             <Route path="/cancel" element={<CancelPage />} />
 
             <Route path="/admin" element={<AdminPage />} />
