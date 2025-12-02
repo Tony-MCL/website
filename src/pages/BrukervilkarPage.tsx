@@ -3,83 +3,67 @@ import React from "react";
 const BrukervilkarPage: React.FC = () => {
   return (
     <main className="page legal-page">
-      <section className="legal-hero">
+      <section className="legal-header">
         <h1>Brukervilkår</h1>
         <p className="legal-intro">
-          Disse brukervilkårene regulerer bruken av apper og tjenester levert av
-          Mathisens Morning Coffee Labs («MCL», «vi», «oss»).
+          Disse brukervilkårene regulerer hvordan du kan bruke tjenester og
+          apper levert av Mathisens Morning Coffee Labs.
         </p>
       </section>
 
       <section className="legal-section">
-        <h2>1. Lisens og bruksrett</h2>
+        <h2>1. Lisens og bruk</h2>
         <p>
-          Når du kjøper eller får tilgang til en lisens, får du en personlig,
-          ikke-eksklusiv og ikke-overførbar rett til å bruke appen i
-          lisensperioden.
-        </p>
-        <p>Det er ikke tillatt å:</p>
-        <ul>
-          <li>kopiere, videreselge eller distribuere appen videre</li>
-          <li>omgå lisenssystemet eller endre tekniske sperrer</li>
-          <li>bruke appen til ulovlige formål</li>
-        </ul>
-      </section>
-
-      <section className="legal-section">
-        <h2>2. Krav til bruker og miljø</h2>
-        <p>
-          Du er selv ansvarlig for å ha nødvendig utstyr, nettleser og
-          internettilgang for å bruke appene. Ytelse og opplevelse kan variere
-          etter enhet og nettverk.
+          Du får en personlig, ikke-overførbar lisens til å bruke tjenesten i
+          henhold til valgt lisensmodell. Lisensen gir rett til normal bruk
+          internt i egen virksomhet, men ikke til videresalg eller
+          videredistribusjon av tjenesten.
         </p>
       </section>
 
       <section className="legal-section">
-        <h2>3. Endringer og oppdateringer</h2>
+        <h2>2. Konto og tilgang</h2>
         <p>
-          Vi kan oppdatere appene fortløpende, for eksempel for å rette feil,
-          forbedre funksjon eller tilpasse oss endringer i regelverk og
-          teknologi.
-        </p>
-        <p>
-          Ved større endringer som påvirker funksjonalitet eller lisensmodell,
-          vil vi informere via nettsiden eller i appen.
+          Der tjenesten krever innlogging, er du ansvarlig for å ta vare på
+          innloggingsinformasjonen og sørge for at uvedkommende ikke får
+          tilgang. Misbruk eller mistenkt misbruk må meldes til oss så snart
+          som mulig.
         </p>
       </section>
 
       <section className="legal-section">
-        <h2>4. Ansvarsbegrensning</h2>
+        <h2>3. Akseptabel bruk</h2>
         <p>
-          Appene våre er utviklet for profesjonell og praktisk bruk, men resultat
-          og tolkning av beregninger er alltid brukerens ansvar. Du må selv
-          kontrollere at forutsetninger, input og resultater er korrekte for
-          ditt konkrete formål.
-        </p>
-        <p>
-          Vi er ikke ansvarlig for indirekte tap, følgeskader eller tapte
-          inntekter som følge av bruk eller manglende tilgjengelighet, med
-          mindre annet følger av ufravikelig lov.
+          Tjenestene skal ikke brukes på en måte som bryter gjeldende lovverk,
+          krenker andres rettigheter eller forsøker å omgå tekniske
+          begrensninger og lisensmekanismer.
         </p>
       </section>
 
       <section className="legal-section">
-        <h2>5. Misbruk og stenging</h2>
+        <h2>4. Tilgjengelighet og endringer</h2>
         <p>
-          Ved alvorlig misbruk, forsøk på hacking eller bevisst omgåelse av
-          lisenssystemet, kan vi midlertidig eller permanent stenge tilgangen
-          til lisensen.
+          Vi tilstreber stabil drift, men kan ikke garantere 100 % oppetid.
+          Tjenestene kan oppdateres eller endres over tid, blant annet for å
+          forbedre funksjonalitet eller sikkerhet.
         </p>
       </section>
 
       <section className="legal-section">
-        <h2>6. Kontakt</h2>
+        <h2>5. Ansvarsbegrensning</h2>
         <p>
-          Har du spørsmål om brukervilkårene, ta kontakt på{" "}
-          <a href="mailto:support@morningcoffeelabs.no">
-            support@morningcoffeelabs.no
-          </a>
-          .
+          Tjenestene leveres «som de er». Vi er ikke ansvarlige for indirekte
+          tap, som f.eks. tapt fortjeneste eller driftsstans, så langt dette er
+          tillatt etter gjeldende rett.
+        </p>
+      </section>
+
+      <section className="legal-section">
+        <h2>6. Endringer i brukervilkår</h2>
+        <p>
+          Brukervilkårene kan oppdateres ved behov. Vesentlige endringer vil bli
+          varslet gjennom nettsiden eller per e-post. Oppdatert versjon vil
+          alltid være tilgjengelig her.
         </p>
       </section>
     </main>
