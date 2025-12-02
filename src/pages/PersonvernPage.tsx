@@ -3,136 +3,102 @@ import React from "react";
 const PersonvernPage: React.FC = () => {
   return (
     <main className="page legal-page">
-      <section className="legal-hero">
+      <section className="legal-header">
         <h1>Personvernerklæring</h1>
         <p className="legal-intro">
           Denne personvernerklæringen beskriver hvordan Mathisens Morning Coffee
-          Labs («vi», «oss») behandler personopplysninger i forbindelse med
-          kjøp og bruk av våre apper og nettsider.
+          Labs behandler personopplysninger i tilknytning til våre nettsider og
+          digitale tjenester.
         </p>
       </section>
 
       <section className="legal-section">
         <h2>1. Behandlingsansvarlig</h2>
         <p>
-          Behandlingsansvarlig er <strong>Mathisens Morning Coffee Labs</strong>
-          .
+          Mathisens Morning Coffee Labs er behandlingsansvarlig for
+          personopplysninger som samles inn gjennom nettsiden og tjenestene.
         </p>
+      </section>
+
+      <section className="legal-section">
+        <h2>2. Hvilke opplysninger vi samler inn</h2>
+        <p>Typiske opplysninger vi kan behandle er for eksempel:</p>
         <ul>
-          <li>E-post: support@morningcoffeelabs.no</li>
-          <li>Land: Norge</li>
+          <li>Navn og kontaktinformasjon (for eksempel e-postadresse)</li>
+          <li>
+            Faktureringsopplysninger ved kjøp (håndteres hovedsakelig via
+            Stripe)
+          </li>
+          <li>
+            Tekst som sendes inn via kontaktskjema, idebank eller andre
+            skjemaer
+          </li>
+          <li>
+            Tekniske data om bruk av tjenesten (for eksempel hvilke sider som
+            besøkes)
+          </li>
         </ul>
       </section>
 
       <section className="legal-section">
-        <h2>2. Hvilke data vi samler inn</h2>
-        <p>Vi samler inn og lagrer kun det som er nødvendig for å:</p>
-        <ul>
-          <li>gjennomføre kjøp og administrere lisenser</li>
-          <li>drifte og forbedre appene</li>
-          <li>gi support ved behov</li>
-        </ul>
-        <p>Typiske opplysninger er:</p>
-        <ul>
-          <li>Navn og e-postadresse</li>
-          <li>Informasjon knyttet til kjøp (produkt, beløp, tidspunkt)</li>
-          <li>Tekniske data som lisens-ID og lisenshistorikk</li>
-        </ul>
-      </section>
-
-      <section className="legal-section">
-        <h2>3. Betaling – Stripe</h2>
+        <h2>3. Formål og behandlingsgrunnlag</h2>
         <p>
-          Betaling håndteres av <strong>Stripe</strong>. Stripe er egen
-          behandlingsansvarlig for betalingsinformasjon som kortdata og
-          betalingsmiddel. Vi mottar ikke og lagrer ikke kortnummer eller
-          sikkerhetskoder.
-        </p>
-        <p>
-          Vi lagrer kun referanseopplysninger som knytter betalingen til lisensen
-          (for eksempel Stripe-kunde-ID, lisens-ID og status).
-        </p>
-      </section>
-
-      <section className="legal-section">
-        <h2>4. Lagring og sikkerhet</h2>
-        <p>
-          Lisensdata og tilknyttede hendelser kan lagres i sikre skyløsninger
-          (for eksempel Firebase/Firestore). Tilgangen er begrenset til det som
-          er nødvendig for drift og support.
-        </p>
-        <p>
-          Vi bruker moderne sikkerhetsmekanismer, tilgangsstyring og logging for
-          å beskytte data mot uautorisert tilgang.
-        </p>
-      </section>
-
-      <section className="legal-section">
-        <h2>5. Formål og behandlingsgrunnlag</h2>
-        <p>Hovedformålene er:</p>
-        <ul>
-          <li>Å oppfylle avtalen om kjøp og levering av lisens</li>
-          <li>Å administrere lisensstatus og tilgang i appen</li>
-          <li>Å følge opp supporthenvendelser</li>
-        </ul>
-        <p>
-          Behandlingsgrunnlaget er GDPR artikkel 6 (1) b – avtaleoppfyllelse,
-          samt artikkel 6 (1) f – berettiget interesse, der det er relevant
-          (f.eks. sikkerhet og misbruksforebygging).
-        </p>
-      </section>
-
-      <section className="legal-section">
-        <h2>6. Lagringstid</h2>
-        <p>
-          Vi lagrer lisens- og kjøpsrelaterte data så lenge det er nødvendig for
-          å:
+          Opplysningene brukes blant annet til å:
         </p>
         <ul>
-          <li>levere tjenesten</li>
-          <li>oppfylle lovpålagte krav (for eksempel bokføring)</li>
-          <li>dokumentere historikk ved eventuelle reklamasjoner</li>
+          <li>levere og administrere tjenester og lisenser</li>
+          <li>håndtere kjøp, betaling og kundeservice</li>
+          <li>forbedre og videreutvikle tjenestene</li>
+          <li>
+            sende relevant informasjon dersom du har samtykket til dette
+            (nyhetsbrev o.l.).
+          </li>
         </ul>
       </section>
 
       <section className="legal-section">
-        <h2>7. Dine rettigheter</h2>
-        <p>Som registrert har du blant annet rett til å:</p>
-        <ul>
-          <li>be om innsyn i hvilke opplysninger vi har om deg</li>
-          <li>be om retting eller sletting der det er mulig</li>
-          <li>protestere mot eller begrense behandling i enkelte tilfeller</li>
-        </ul>
+        <h2>4. Lagring og sletting</h2>
         <p>
-          Ta kontakt på{" "}
-          <a href="mailto:support@morningcoffeelabs.no">
-            support@morningcoffeelabs.no
-          </a>{" "}
-          dersom du ønsker å utøve dine rettigheter.
+          Vi lagrer personopplysninger så lenge det er nødvendig for formålet
+          de ble samlet inn for, eller så lenge vi er pålagt det gjennom
+          regnskaps- og bokføringsregler. Opplysninger som ikke lenger er
+          nødvendige blir slettet eller anonymisert.
         </p>
       </section>
 
       <section className="legal-section">
-        <h2>8. Deling med tredjeparter</h2>
+        <h2>5. Dine rettigheter</h2>
         <p>
-          Vi deler ikke personopplysninger med andre enn det som er nødvendig
-          for drift av tjenesten, for eksempel:
-        </p>
-        <ul>
-          <li>Stripe (betaling)</li>
-          <li>Skyleverandør for lagring av lisensdata</li>
-        </ul>
-        <p>
-          Slike leverandører er underlagt databehandleravtale eller egne
-          personvernvilkår.
+          Du har rett til innsyn, retting og i noen tilfeller sletting av
+          personopplysninger vi har om deg. Du kan også protestere mot eller
+          be om begrensning av behandlingen, samt trekke tilbake eventuelle
+          samtykker.
         </p>
       </section>
 
       <section className="legal-section">
-        <h2>9. Endringer i personvernerklæringen</h2>
+        <h2>6. Tredjeparter og databehandlere</h2>
         <p>
-          Vi kan oppdatere denne erklæringen ved behov. Vesentlige endringer
-          vil bli varslet via nettsiden eller i appen.
+          Vi kan bruke underleverandører (for eksempel Stripe for betaling og
+          hosting-leverandører) til å behandle data på våre vegne. Disse er
+          bundet av databehandleravtaler og kan ikke bruke opplysningene til
+          egne formål.
+        </p>
+      </section>
+
+      <section className="legal-section">
+        <h2>7. Endringer i personvernerklæringen</h2>
+        <p>
+          Personvernerklæringen kan oppdateres ved behov. Oppdatert versjon vil
+          alltid være tilgjengelig på denne siden.
+        </p>
+      </section>
+
+      <section className="legal-section">
+        <h2>8. Kontakt</h2>
+        <p>
+          For spørsmål om personvern kan du kontakte oss via kontaktskjemaet på
+          nettsiden.
         </p>
       </section>
     </main>
