@@ -536,21 +536,28 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                 sier opp.
               </p>
 
-              <label
+              {/* NYHETSBREV – checkbox og tekst på samme linje */}
+              <div
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "0.4rem",
-                  cursor: "pointer",
+                  marginTop: "0.2rem",
                 }}
               >
                 <input
+                  id="mcl-newsletter-optin"
                   type="checkbox"
                   checked={marketingOptIn}
                   onChange={(e) => setMarketingOptIn(e.target.checked)}
                 />
-                <span>Motta nyhetsbrev fra Morning Coffee Labs.</span>
-              </label>
+                <label
+                  htmlFor="mcl-newsletter-optin"
+                  style={{ cursor: "pointer" }}
+                >
+                  Motta nyhetsbrev fra Morning Coffee Labs.
+                </label>
+              </div>
             </div>
           </div>
 
