@@ -29,19 +29,14 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
   );
   const [isOneTime, setIsOneTime] = useState(false);
 
-  const [checkedTerms, setCheckedTerms] = useState(false);
+  // Kun to sjekkbokser:
+  const [checkedMain, setCheckedMain] = useState(false);
   const [checkedDelivery, setCheckedDelivery] = useState(false);
-  const [checkedPrivacy, setCheckedPrivacy] = useState(false);
-  const [checkedSubscription, setCheckedSubscription] = useState(false);
 
   if (!open) return null;
 
   const disableCheckout =
-    !selectedPeriod ||
-    !checkedTerms ||
-    !checkedDelivery ||
-    !checkedPrivacy ||
-    (!isOneTime && !checkedSubscription);
+    !selectedPeriod || !checkedMain || !checkedDelivery;
 
   const handleBackdropClick = () => {
     onClose();
@@ -68,6 +63,11 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
     return "";
   };
 
+  // Tekst i boks #2 endres ut fra om det er abonnement eller engang
+  const deliveryLabel = isOneTime
+    ? "Jeg samtykker til umiddelbar levering og forstår at angreretten da bortfaller (Angrerettloven §22 n / EU Digital Content Directive)."
+    : "Jeg samtykker til umiddelbar levering og forstår at angreretten da bortfaller (Angrerettloven §22 n / EU Digital Content Directive), og jeg godtar at lisensen fornyes automatisk med valgt periode inntil jeg selv avslutter abonnementet.";
+
   return (
     <div className="admin-modal-backdrop" onClick={handleBackdropClick}>
       <div className="admin-modal" onClick={handleInnerClick}>
@@ -78,7 +78,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
           lisensen aktiveres automatisk når du sendes tilbake til nettsiden.
         </p>
 
-        {/* --- PERIODEVALG: KUN TO BOKSER --- */}
+        {/* --- PERIODEVALG: TO BOKSER --- */}
         <div
           className="fs-license-grid"
           style={{
@@ -86,7 +86,6 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
             gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
           }}
         >
-          {/* Abonnement / periode – vi bruker samme kortstil */}
           <button
             type="button"
             className={`fs-license-card ${
@@ -116,7 +115,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
           </button>
         </div>
 
-        {/* --- ENGANG / ABONNEMENT-VALG I EN BRED BOKS --- */}
+        {/* --- ENGANG / ABONNEMENT --- */}
         <div
           className="fs-license-card"
           style={{
@@ -158,12 +157,12 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
           )}
         </div>
 
-        {/* --- VALGT MODELL-TEKST --- */}
+        {/* --- VALGT MODELL --- */}
         <p style={{ marginBottom: "1rem", fontSize: "0.9rem" }}>
           <strong>Valgt modell:</strong> {renderSelectedText()}
         </p>
 
-        {/* --- JURIDISKE GODKJENNINGER --- */}
+        {/* --- TO JURIDISKE BOKSER --- */}
         <div className="fs-checklist">
           <div className="fs-checkitem">
             <label
@@ -176,12 +175,15 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
             >
               <input
                 type="checkbox"
-                checked={checkedTerms}
-                onChange={(e) => setCheckedTerms(e.target.checked)}
+                checked={checkedMain}
+                onChange={(e) => setCheckedMain(e.target.checked)}
                 style={{ marginTop: "0.18rem" }}
               />
               <span>
-                Jeg bekrefter at jeg har lest og forstått kjøpsvilkårene.
+                Jeg bekrefter at jeg har lest og aksepterer kjøpsvilkår og
+                personvernerklæring, og at Stripe behandler
+                betalingsinformasjonen min på vegne av Mathisens Morning Coffee
+                Labs.
               </span>
             </label>
           </div>
@@ -201,63 +203,9 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
                 onChange={(e) => setCheckedDelivery(e.target.checked)}
                 style={{ marginTop: "0.18rem" }}
               />
-              <span>
-                Jeg samtykker til umiddelbar levering og forstår at angreretten
-                da bortfaller (Angrerettloven §22 n / EU Digital Content
-                Directive).
-              </span>
+              <span>{deliveryLabel}</span>
             </label>
           </div>
-
-          <div className="fs-checkitem">
-            <label
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: "0.5rem",
-                fontSize: "0.9rem",
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={checkedPrivacy}
-                onChange={(e) => setCheckedPrivacy(e.target.checked)}
-                style={{ marginTop: "0.18rem" }}
-              />
-              <span>
-                Jeg godtar personvernerklæringen og at Stripe behandler
-                betalingsinformasjonen min på vegne av Mathisens Morning Coffee
-                Labs.
-              </span>
-            </label>
-          </div>
-
-          {!isOneTime && (
-            <div className="fs-checkitem">
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: "0.5rem",
-                  fontSize: "0.9rem",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checkedSubscription}
-                  onChange={(e) =>
-                    setCheckedSubscription(e.target.checked)
-                  }
-                  style={{ marginTop: "0.18rem" }}
-                />
-                <span>
-                  Jeg godtar vilkårene for abonnement, inkludert automatisk
-                  fornyelse til oppgitt pris og intervall, inntil jeg selv
-                  avslutter abonnementet.
-                </span>
-              </label>
-            </div>
-          )}
         </div>
 
         {/* --- HANDLINGER --- */}
