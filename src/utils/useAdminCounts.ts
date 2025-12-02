@@ -1,50 +1,55 @@
 import { useEffect, useState } from "react";
-import { collection, getCountFromServer } from "firebase/firestore";
-import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../src/firebase";
 
 export const useAdminCounts = () => {
-  const [ideas, setIdeas] = useState<number>(0);
-  const [messages, setMessages] = useState<number>(0);
-  const [licenses, setLicenses] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [counts, setCounts] = useState({
+    messages: 0,
+    ideas: 0,
+    licenses: 0,
+    trialSignups: 0,
+  });
 
   useEffect(() => {
-    const load = async () => {
+    const loadCounts = async () => {
       try {
         setLoading(true);
 
-        const ideasSnap = await getCountFromServer(collection(db, "ideas"));
-        const messagesSnap = await getCountFromServer(collection(db, "messages"));
+        const messagesSnap = await getDocs(collection(db, "contactMessages"));
+        const ideasSnap = await getDocs(collection(db, "ideas"));
 
-        // Lisenser er placeholder — tom count hvis collection ikke finnes
-        let licenseCount = 0;
+        let licensesCount = 0;
         try {
-          const licSnap = await getCountFromServer(collection(db, "licenses"));
-          licenseCount = licSnap.data().count;
-        } catch {
-          licenseCount = 0;
+          const licensesSnap = await getDocs(collection(db, "licenses"));
+          licensesCount = licensesSnap.size;
+        } catch (err) {
+          console.warn("Kunne ikke hente licenses:", err);
         }
 
-        setIdeas(ideasSnap.data().count);
-        setMessages(messagesSnap.data().count);
-        setLicenses(licenseCount);
-      } catch (err: any) {
-        setError("Kunne ikke hente tall fra Firestore.");
-        console.error(err);
+        let trialsCount = 0;
+        try {
+          const trialsSnap = await getDocs(collection(db, "trialSignups"));
+          trialsCount = trialsSnap.size;
+        } catch (err) {
+          console.warn("Kunne ikke hente trialSignups:", err);
+        }
+
+        setCounts({
+          messages: messagesSnap.size,
+          ideas: ideasSnap.size,
+          licenses: licensesCount,
+          trialSignups: trialsCount,
+        });
+      } catch (error) {
+        console.error("Feil i useAdminCounts:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    load();
+    loadCounts();
   }, []);
 
-  return {
-    ideas,
-    messages,
-    licenses,
-    loading,
-    error,
-  };
+  return { loading, counts };
 };
