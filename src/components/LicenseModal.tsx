@@ -99,7 +99,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
       return;
     }
     if (!billingPeriod) {
-      setError("Lisensperiode mangler.");
+      setError("Lisensperiode mangler.";
       return;
     }
 
@@ -516,19 +516,15 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
               <p style={{ margin: 0 }}>
                 Ved å klikke <strong>Bekreft</strong> bekrefter jeg at jeg har
                 lest og aksepterer{" "}
-                <a href="/kjopsvilkar" target="_blank" rel="noreferrer">
+                <a href="#/kjopsvilkar" target="_blank" rel="noreferrer">
                   Kjøpsvilkår
                 </a>
                 ,{" "}
-                <a href="/brukervilkår" target="_blank" rel="noreferrer">
+                <a href="#/brukervilkar" target="_blank" rel="noreferrer">
                   Brukervilkår
                 </a>{" "}
                 og{" "}
-                <a
-                  href="/personvernerklaering"
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href="#/personvern" target="_blank" rel="noreferrer">
                   Personvernerklæring
                 </a>
                 , at lisensen aktiveres umiddelbart, angreretten bortfaller og
