@@ -24,28 +24,24 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
   product,
   productName,
 }) => {
+  const [selectedPeriod, setSelectedPeriod] = useState<"month" | "year" | null>(
+    null
+  );
+  const [isOneTime, setIsOneTime] = useState(false);
+
   const [checkedTerms, setCheckedTerms] = useState(false);
   const [checkedDelivery, setCheckedDelivery] = useState(false);
   const [checkedPrivacy, setCheckedPrivacy] = useState(false);
   const [checkedSubscription, setCheckedSubscription] = useState(false);
 
-  const [selectedType, setSelectedType] = useState<
-    | "monthly-sub"
-    | "yearly-sub"
-    | "monthly-one"
-    | "yearly-one"
-    | null
-  >(null);
-
   if (!open) return null;
 
   const disableCheckout =
-    !selectedType ||
+    !selectedPeriod ||
     !checkedTerms ||
     !checkedDelivery ||
     !checkedPrivacy ||
-    ((selectedType === "monthly-sub" || selectedType === "yearly-sub") &&
-      !checkedSubscription);
+    (!isOneTime && !checkedSubscription);
 
   const handleBackdropClick = () => {
     onClose();
@@ -54,19 +50,22 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
   const handleInnerClick: React.MouseEventHandler<HTMLDivElement> = (e) =>
     e.stopPropagation();
 
-  const renderPrices = () => {
-    switch (selectedType) {
-      case "monthly-sub":
-        return `NOK ${NOK_PRICES.monthly},- / mnd  •  €${EUR_PRICES.monthly}`;
-      case "yearly-sub":
-        return `NOK ${NOK_PRICES.yearly},- / år  •  €${EUR_PRICES.yearly}`;
-      case "monthly-one":
-        return `NOK ${NOK_PRICES.monthly},- (1 mnd)  •  €${EUR_PRICES.monthly}`;
-      case "yearly-one":
-        return `NOK ${NOK_PRICES.yearly},- (1 år)  •  €${EUR_PRICES.yearly}`;
-      default:
-        return "Velg lisensmodell";
+  const renderSelectedText = () => {
+    if (!selectedPeriod) return "Velg først periode og type lisens.";
+
+    if (selectedPeriod === "month" && !isOneTime) {
+      return `Abonnement – månedlig · NOK ${NOK_PRICES.monthly},- / mnd · €${EUR_PRICES.monthly} / mnd`;
     }
+    if (selectedPeriod === "year" && !isOneTime) {
+      return `Abonnement – årlig · NOK ${NOK_PRICES.yearly},- / år · €${EUR_PRICES.yearly} / år`;
+    }
+    if (selectedPeriod === "month" && isOneTime) {
+      return `Engangslisens – 1 mnd · NOK ${NOK_PRICES.monthly},- · €${EUR_PRICES.monthly}`;
+    }
+    if (selectedPeriod === "year" && isOneTime) {
+      return `Engangslisens – 1 år · NOK ${NOK_PRICES.yearly},- · €${EUR_PRICES.yearly}`;
+    }
+    return "";
   };
 
   return (
@@ -79,118 +78,193 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
           lisensen aktiveres automatisk når du sendes tilbake til nettsiden.
         </p>
 
-        {/* --- LISENSVALG --- */}
-        <div className="fs-license-grid" style={{ marginBottom: "1rem" }}>
-          {/* Abonnement måned */}
+        {/* --- PERIODEVALG: KUN TO BOKSER --- */}
+        <div
+          className="fs-license-grid"
+          style={{
+            marginBottom: "1rem",
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+          }}
+        >
+          {/* Abonnement / periode – vi bruker samme kortstil */}
           <button
+            type="button"
             className={`fs-license-card ${
-              selectedType === "monthly-sub" ? "active" : ""
+              selectedPeriod === "month" ? "active" : ""
             }`}
-            onClick={() => setSelectedType("monthly-sub")}
+            onClick={() => setSelectedPeriod("month")}
           >
-            <div className="fs-license-label">Abonnement – månedlig</div>
+            <div className="fs-license-label">Månedlig</div>
             <p>
-              NOK {NOK_PRICES.monthly},- / mnd  
+              NOK {NOK_PRICES.monthly},- / mnd
               <br />€{EUR_PRICES.monthly} / mnd
             </p>
           </button>
 
-          {/* Abonnement årlig */}
           <button
+            type="button"
             className={`fs-license-card ${
-              selectedType === "yearly-sub" ? "active" : ""
+              selectedPeriod === "year" ? "active" : ""
             }`}
-            onClick={() => setSelectedType("yearly-sub")}
+            onClick={() => setSelectedPeriod("year")}
           >
-            <div className="fs-license-label">Abonnement – årlig</div>
+            <div className="fs-license-label">Årlig</div>
             <p>
-              NOK {NOK_PRICES.yearly},- / år  
+              NOK {NOK_PRICES.yearly},- / år
               <br />€{EUR_PRICES.yearly} / år
             </p>
           </button>
-
-          {/* Engang 1 mnd */}
-          <button
-            className={`fs-license-card ${
-              selectedType === "monthly-one" ? "active" : ""
-            }`}
-            onClick={() => setSelectedType("monthly-one")}
-          >
-            <div className="fs-license-label">Engangslisens – 1 mnd</div>
-            <p>
-              NOK {NOK_PRICES.monthly},-  
-              <br />€{EUR_PRICES.monthly}
-            </p>
-          </button>
-
-          {/* Engang 1 år */}
-          <button
-            className={`fs-license-card ${
-              selectedType === "yearly-one" ? "active" : ""
-            }`}
-            onClick={() => setSelectedType("yearly-one")}
-          >
-            <div className="fs-license-label">Engangslisens – 1 år</div>
-            <p>
-              NOK {NOK_PRICES.yearly},-  
-              <br />€{EUR_PRICES.yearly}
-            </p>
-          </button>
         </div>
 
-        <p style={{ marginBottom: "1rem", fontSize: "0.9rem" }}>
-          <strong>Valgt modell:</strong> {renderPrices()}
-        </p>
-
-        {/* --- JURIDISKE GODKJENNINGER ---  */}
-        <div className="fs-checklist">
-          <label className="fs-checkitem">
+        {/* --- ENGANG / ABONNEMENT-VALG I EN BRED BOKS --- */}
+        <div
+          className="fs-license-card"
+          style={{
+            marginBottom: "1rem",
+            width: "100%",
+          }}
+        >
+          <div className="fs-license-label">Type lisens</div>
+          <p style={{ marginBottom: "0.6rem" }}>
+            Velg om lisensen skal fornyes automatisk (abonnement), eller om du
+            ønsker en tidsbegrenset engangslisens uten videre trekk.
+          </p>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "0.5rem",
+              fontSize: "0.9rem",
+              cursor: "pointer",
+            }}
+          >
             <input
               type="checkbox"
-              checked={checkedTerms}
-              onChange={(e) => setCheckedTerms(e.target.checked)}
+              checked={isOneTime}
+              onChange={(e) => setIsOneTime(e.target.checked)}
+              style={{ marginTop: "0.18rem" }}
             />
-            Jeg bekrefter at jeg har lest og forstått kjøpsvilkårene.
+            <span>
+              Kjøp som <strong>engangslisens</strong> (ingen automatisk
+              fornyelse). Når perioden er over, må du selv kjøpe ny lisens hvis
+              du vil fortsette å bruke PRO-funksjonene.
+            </span>
           </label>
-
-          <label className="fs-checkitem">
-            <input
-              type="checkbox"
-              checked={checkedDelivery}
-              onChange={(e) => setCheckedDelivery(e.target.checked)}
-            />
-            Jeg samtykker til umiddelbar levering og forstår at angreretten da
-            bortfaller (Angrerettloven §22 n / EU Digital Content Directive).
-          </label>
-
-          <label className="fs-checkitem">
-            <input
-              type="checkbox"
-              checked={checkedPrivacy}
-              onChange={(e) => setCheckedPrivacy(e.target.checked)}
-            />
-            Jeg godtar personvernerklæringen og at Stripe behandler
-            betalingsinformasjon.
-          </label>
-
-          {(selectedType === "monthly-sub" ||
-            selectedType === "yearly-sub") && (
-            <label className="fs-checkitem">
-              <input
-                type="checkbox"
-                checked={checkedSubscription}
-                onChange={(e) => setCheckedSubscription(e.target.checked)}
-              />
-              Jeg godtar vilkårene for abonnement og automatisk fornyelse.
-            </label>
+          {!isOneTime && (
+            <p style={{ marginTop: "0.6rem", fontSize: "0.85rem" }}>
+              Uten avhuking kjøpes lisensen som <strong>abonnement</strong> med
+              automatisk fornyelse i valgt periode.
+            </p>
           )}
         </div>
 
+        {/* --- VALGT MODELL-TEKST --- */}
+        <p style={{ marginBottom: "1rem", fontSize: "0.9rem" }}>
+          <strong>Valgt modell:</strong> {renderSelectedText()}
+        </p>
+
+        {/* --- JURIDISKE GODKJENNINGER --- */}
+        <div className="fs-checklist">
+          <div className="fs-checkitem">
+            <label
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "0.5rem",
+                fontSize: "0.9rem",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={checkedTerms}
+                onChange={(e) => setCheckedTerms(e.target.checked)}
+                style={{ marginTop: "0.18rem" }}
+              />
+              <span>
+                Jeg bekrefter at jeg har lest og forstått kjøpsvilkårene.
+              </span>
+            </label>
+          </div>
+
+          <div className="fs-checkitem">
+            <label
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "0.5rem",
+                fontSize: "0.9rem",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={checkedDelivery}
+                onChange={(e) => setCheckedDelivery(e.target.checked)}
+                style={{ marginTop: "0.18rem" }}
+              />
+              <span>
+                Jeg samtykker til umiddelbar levering og forstår at angreretten
+                da bortfaller (Angrerettloven §22 n / EU Digital Content
+                Directive).
+              </span>
+            </label>
+          </div>
+
+          <div className="fs-checkitem">
+            <label
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "0.5rem",
+                fontSize: "0.9rem",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={checkedPrivacy}
+                onChange={(e) => setCheckedPrivacy(e.target.checked)}
+                style={{ marginTop: "0.18rem" }}
+              />
+              <span>
+                Jeg godtar personvernerklæringen og at Stripe behandler
+                betalingsinformasjonen min på vegne av Mathisens Morning Coffee
+                Labs.
+              </span>
+            </label>
+          </div>
+
+          {!isOneTime && (
+            <div className="fs-checkitem">
+              <label
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "0.5rem",
+                  fontSize: "0.9rem",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={checkedSubscription}
+                  onChange={(e) =>
+                    setCheckedSubscription(e.target.checked)
+                  }
+                  style={{ marginTop: "0.18rem" }}
+                />
+                <span>
+                  Jeg godtar vilkårene for abonnement, inkludert automatisk
+                  fornyelse til oppgitt pris og intervall, inntil jeg selv
+                  avslutter abonnementet.
+                </span>
+              </label>
+            </div>
+          )}
+        </div>
+
+        {/* --- HANDLINGER --- */}
         <div
           className="admin-modal-actions"
           style={{ marginTop: "1.5rem", display: "flex", gap: "0.7rem" }}
         >
-          {/* DISABLED BUTTON */}
           {disableCheckout ? (
             <button className="checkout-button disabled" disabled>
               Fullfør betaling
@@ -198,15 +272,8 @@ const LicenseModal: React.FC<LicenseModalProps> = ({
           ) : (
             <CheckoutButton
               product={product}
-              billingPeriod={
-                selectedType === "monthly-sub" || selectedType === "monthly-one"
-                  ? "month"
-                  : "year"
-              }
-              autoRenew={
-                selectedType === "monthly-sub" ||
-                selectedType === "yearly-sub"
-              }
+              billingPeriod={selectedPeriod!}
+              autoRenew={!isOneTime}
               label="Fullfør betaling"
             />
           )}
