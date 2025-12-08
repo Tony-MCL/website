@@ -37,28 +37,42 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* SEKSJON: PRODUKTER / VERKTØY */}
+      {/* SEKSJON: MANAGE SYSTEM / PRODUKTER */}
       <section style={{ marginTop: "2.5rem" }}>
-        <h2 style={{ marginBottom: "0.4rem" }}>Hva vi bygger</h2>
+        <h2 style={{ marginBottom: "0.4rem" }}>Manage System – verktøyserien vår</h2>
+        <p
+          style={{
+            marginTop: 0,
+            marginBottom: "1rem",
+            maxWidth: "720px",
+            color: "var(--mcl-text-dim)",
+            lineHeight: 1.6,
+          }}
+        >
+          Morning Coffee Labs står bak <strong>Manage System</strong> – en serie
+          digitale verktøy for prosjekter. Målet er å gi oversikt og struktur
+          uten å gjøre ting mer komplisert enn nødvendig. Første modul ut er{" "}
+          <strong>Manage Progress</strong>, tett fulgt av <strong>Manage Documents</strong>.
+        </p>
         <p
           style={{
             marginTop: 0,
             marginBottom: "1.4rem",
             maxWidth: "720px",
             color: "var(--mcl-text-dim)",
-            lineHeight: 1.6,
+            fontSize: "0.9rem",
           }}
         >
-          Morning Coffee Labs utvikler egne digitale verktøy som kan brukes både
-          av enkeltpersoner og team. Fokus ligger på tydelighet, kvalitet og
-          enkel bruk – ikke på støy og unødvendig kompleksitet.
+          Manage System vil etter hvert få eget nettsted på{" "}
+          <strong>ManageSystem.no</strong> / <strong>.app</strong>. Inntil videre
+          finner du informasjon om verktøyene her på MorningCoffeeLabs.no.
         </p>
 
         <section className="intro-grid">
           <div className="intro-card">
             <h3>Manage Progress</h3>
             <p>
-              Fremdriftsverktøy for prosjekter – fra små interne oppgaver til
+              Fremdriftsverktøy for prosjekter – fra små interne initiativ til
               større leveranser. Hjelper deg å strukturere faser, aktiviteter og
               avhengigheter uten å miste oversikten.
             </p>
@@ -84,16 +98,12 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="intro-card">
-            <h3>Digital Formelsamling</h3>
+            <h3>Videre verktøy i Manage-serien</h3>
             <p>
-              En digital formelsamling og referanse for tekniske beregninger.
-              Utvikles videre som en del av plattformen og vil etter hvert bli
-              tilgjengelig som eget produkt.
-            </p>
-            <p style={{ marginTop: "0.6rem" }}>
-              <Link to="/produkter/formelsamling">
-                Les mer om Formelsamlingen →
-              </Link>
+              På sikt vil Manage System utvides med flere moduler for prosjekter
+              og drift – for eksempel rapportering, oppfølging og enkle
+              statusverktøy. Alt bygges stegvis, basert på faktiske behov i
+              arbeidshverdagen.
             </p>
           </div>
         </section>
@@ -172,7 +182,7 @@ const HomePage: React.FC = () => {
         </p>
       </section>
 
-      {/* SEKSJON: HVORDAN VI TENKER */}
+      {/* SEKSJON: HVORDAN VI JOBBER */}
       <section style={{ marginTop: "3rem" }}>
         <h2 style={{ marginBottom: "0.4rem" }}>Hvordan vi jobber</h2>
         <p
