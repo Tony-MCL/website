@@ -1,50 +1,57 @@
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
+const assetBase = import.meta.env.BASE_URL || "/";
+const logoUrl = `${assetBase}mcl-logo.png`;
 
 const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  const closeMenu = () => setOpen(false);
+  const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="header">
-      <div className="header-inner">
-        <Link to="/" className="logo">
-          Morning Coffee Labs
-        </Link>
+    <>
+      <header className="header">
+        <div className="header-logo">
+          <Link to="/" onClick={closeMenu}>
+            <img src={logoUrl} alt="Morning Coffee Labs" />
+          </Link>
+        </div>
 
-        <button
-          className="menu-toggle"
-          onClick={() => setOpen((prev) => !prev)}
-          aria-label="Toggle menu"
-        >
-          ☰
-        </button>
-
-        <nav className={`nav ${open ? "open" : ""}`}>
-          <NavLink to="/" end>
+        <nav className="header-nav">
+          <Link className={isActive("/") ? "active" : ""} to="/">
             Hjem
-          </NavLink>
-
-          {/* PRODUKTER */}
-          <NavLink to="/produkter/manage-progress">
-            Manage Progress
-          </NavLink>
-
-          <NavLink to="/produkter/manage-documents">
-            Manage Documents
-          </NavLink>
-
-          {/* Formelsamling og Idebank er fjernet fra menyen */}
-          {/* <NavLink to="/produkter/formelsamling">Formelsamling</NavLink>
-          <NavLink to="/idebank">Idebank</NavLink> */}
-
-          <NavLink to="/om">Om</NavLink>
-          <NavLink to="/kontakt">Kontakt</NavLink>
-
-          {/* Admin holdes tilgjengelig, men kun i menyen — dette er normalt */}
-          <NavLink to="/admin">Admin</NavLink>
+          </Link>
+          <Link className={isActive("/om") ? "active" : ""} to="/om">
+            Om
+          </Link>
+          <Link
+            className={isActive("/kontakt") ? "active" : ""}
+            to="/kontakt"
+          >
+            Kontakt
+          </Link>
         </nav>
+
+        <div className="hamburger" onClick={() => setOpen((prev) => !prev)}>
+          ☰
+        </div>
+      </header>
+
+      <div className={`mobile-menu ${open ? "open" : ""}`}>
+        <Link to="/" onClick={closeMenu}>
+          Hjem
+        </Link>
+        <Link to="/om" onClick={closeMenu}>
+          Om
+        </Link>
+        <Link to="/kontakt" onClick={closeMenu}>
+          Kontakt
+        </Link>
       </div>
-    </header>
+    </>
   );
 };
 
