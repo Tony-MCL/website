@@ -1,78 +1,50 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-
-const assetBase = import.meta.env.BASE_URL || "/";
-const logoUrl = `${assetBase}mcl-logo.png`;
+import { Link, NavLink } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const location = useLocation();
-
-  const closeMenu = () => setOpen(false);
-  const isActive = (path: string) => location.pathname === path;
 
   return (
-    <>
-      <header className="header">
-        <div className="header-logo">
-          <Link to="/" onClick={closeMenu}>
-            <img src={logoUrl} alt="Morning Coffee Labs" />
-          </Link>
-        </div>
+    <header className="header">
+      <div className="header-inner">
+        <Link to="/" className="logo">
+          Morning Coffee Labs
+        </Link>
 
-        <nav className="header-nav">
-          <Link className={isActive("/") ? "active" : ""} to="/">
-            Hjem
-          </Link>
-          <Link
-            className={isActive("/produkter/formelsamling") ? "active" : ""}
-            to="/produkter/formelsamling"
-          >
-            Formelsamling
-          </Link>
-          <Link className={isActive("/idebank") ? "active" : ""} to="/idebank">
-            Idebank
-          </Link>
-          <Link className={isActive("/om") ? "active" : ""} to="/om">
-            Om
-          </Link>
-          <Link
-            className={isActive("/kontakt") ? "active" : ""}
-            to="/kontakt"
-          >
-            Kontakt
-          </Link>
-          <Link className={isActive("/admin") ? "active" : ""} to="/admin">
-            Admin
-          </Link>
-        </nav>
-
-        <div className="hamburger" onClick={() => setOpen((prev) => !prev)}>
+        <button
+          className="menu-toggle"
+          onClick={() => setOpen((prev) => !prev)}
+          aria-label="Toggle menu"
+        >
           ☰
-        </div>
-      </header>
+        </button>
 
-      <div className={`mobile-menu ${open ? "open" : ""}`}>
-        <Link to="/" onClick={closeMenu}>
-          Hjem
-        </Link>
-        <Link to="/produkter/formelsamling" onClick={closeMenu}>
-          Formelsamling
-        </Link>
-        <Link to="/idebank" onClick={closeMenu}>
-          Idebank
-        </Link>
-        <Link to="/om" onClick={closeMenu}>
-          Om
-        </Link>
-        <Link to="/kontakt" onClick={closeMenu}>
-          Kontakt
-        </Link>
-        <Link to="/admin" onClick={closeMenu}>
-          Admin
-        </Link>
+        <nav className={`nav ${open ? "open" : ""}`}>
+          <NavLink to="/" end>
+            Hjem
+          </NavLink>
+
+          {/* PRODUKTER */}
+          <NavLink to="/produkter/manage-progress">
+            Manage Progress
+          </NavLink>
+
+          <NavLink to="/produkter/manage-documents">
+            Manage Documents
+          </NavLink>
+
+          {/* Formelsamling og Idebank er fjernet fra menyen */}
+          {/* <NavLink to="/produkter/formelsamling">Formelsamling</NavLink>
+          <NavLink to="/idebank">Idebank</NavLink> */}
+
+          <NavLink to="/om">Om</NavLink>
+          <NavLink to="/kontakt">Kontakt</NavLink>
+
+          {/* Admin holdes tilgjengelig, men kun i menyen — dette er normalt */}
+          <NavLink to="/admin">Admin</NavLink>
+        </nav>
       </div>
-    </>
+    </header>
   );
 };
 
