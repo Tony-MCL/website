@@ -1,23 +1,20 @@
 import React from "react";
-import {
-  HashRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import WatermarkLayer from "./components/WatermarkLayer";
 
 import HomePage from "./pages/HomePage";
-import FormelsamlingPage from "./pages/FormelsamlingPage";
-import IdeaBankPage from "./pages/IdeaBankPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import AdminPage from "./pages/AdminPage";
 import SuccessPage from "./pages/SuccessPage";
 import CancelPage from "./pages/CancelPage";
+
+// NYTT: Progress + Tjenester
+import ProgressPage from "./pages/ProgressPage";
+import ServicesPage from "./pages/ServicesPage";
 
 import Dashboard from "./admin/Dashboard";
 import CustomersPage from "./admin/CustomersPage";
@@ -25,7 +22,7 @@ import LicensesPage from "./admin/LicensesPage";
 import MessagesPage from "./admin/MessagesPage";
 import StatsPage from "./admin/StatsPage";
 
-// NYE sider
+// Juridiske sider
 import KjopsvilkarPage from "./pages/KjopsvilkarPage";
 import BrukervilkarPage from "./pages/BrukervilkarPage";
 import PersonvernPage from "./pages/PersonvernPage";
@@ -40,11 +37,13 @@ const App: React.FC = () => {
         <div className="app-content">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route
-              path="/produkter/formelsamling"
-              element={<FormelsamlingPage />}
-            />
-            <Route path="/idebank" element={<IdeaBankPage />} />
+
+            {/* NYTT: Kjøp/priser */}
+            <Route path="/progress" element={<ProgressPage />} />
+
+            {/* NYTT: Tjenester */}
+            <Route path="/tjenester" element={<ServicesPage />} />
+
             <Route path="/om" element={<AboutPage />} />
             <Route path="/kontakt" element={<ContactPage />} />
             <Route path="/success" element={<SuccessPage />} />
@@ -55,6 +54,7 @@ const App: React.FC = () => {
             <Route path="/brukervilkar" element={<BrukervilkarPage />} />
             <Route path="/personvern" element={<PersonvernPage />} />
 
+            {/* Admin (ikke i header, men kan leve videre) */}
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/kunder" element={<CustomersPage />} />
