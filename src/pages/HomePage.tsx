@@ -9,20 +9,19 @@ const HomePage: React.FC = () => {
         <h1 className="hero-title">Morning Coffee Labs</h1>
 
         <p className="hero-tagline">
-          Digitale verktøy som gjør prosjekthverdagen enklere – for folk som
-          jobber i og rundt prosjekter, uansett bransje.
+          Vi bygger digitale verktøy som gjør prosjekthverdagen enklere.
         </p>
 
-        <p className="hero-sub">
-          Vi bygger praktiske, gjennomførte løsninger for planlegging,
-          dokumentasjon og daglige oppgaver. Erfaring fra praktiske fag og
-          tekniske prosjekter gir oss et realistisk blikk på hva som faktisk
-          fungerer i hverdagen, ikke bare på papiret.
+        <p className="hero-sub" style={{ maxWidth: 820 }}>
+          Vårt første produkt er <strong>Manage Progress</strong> – et praktisk
+          fremdriftsverktøy for folk som faktisk jobber i prosjekter. Enkelt å
+          komme i gang med, og laget for oversikt, struktur og gjennomføring –
+          uten unødvendig kompleksitet.
         </p>
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.8rem" }}>
-          <Link to="/om" className="hero-cta">
-            Les mer om Morning Coffee Labs →
+          <Link to="/progress" className="hero-cta">
+            Se priser og kjøp Progress →
           </Link>
           <Link
             to="/kontakt"
@@ -32,186 +31,150 @@ const HomePage: React.FC = () => {
               textDecoration: "underline",
             }}
           >
-            Ta kontakt om et digitalt verktøy →
+            Spørsmål? Ta kontakt →
           </Link>
         </div>
       </section>
 
-      {/* SEKSJON: MANAGE SYSTEM / PRODUKTER */}
+      {/* HVA ER PROGRESS */}
       <section style={{ marginTop: "2.5rem" }}>
-        <h2 style={{ marginBottom: "0.4rem" }}>Manage System – verktøyserien vår</h2>
+        <h2 style={{ marginBottom: "0.4rem" }}>Hva er Manage Progress?</h2>
         <p
           style={{
             marginTop: 0,
-            marginBottom: "1rem",
-            maxWidth: "720px",
+            maxWidth: "820px",
             color: "var(--mcl-text-dim)",
             lineHeight: 1.6,
           }}
         >
-          Morning Coffee Labs står bak <strong>Manage System</strong> – en serie
-          digitale verktøy for prosjekter. Målet er å gi oversikt og struktur
-          uten å gjøre ting mer komplisert enn nødvendig. Første modul ut er{" "}
-          <strong>Manage Progress</strong>, tett fulgt av <strong>Manage Documents</strong>.
+          Manage Progress er laget for deg som vil planlegge, følge opp og
+          kommunisere fremdrift – uten å drukne i tunge systemer. Det passer
+          like godt for små interne prosjekter som for større leveranser, der
+          det er mange oppgaver og avhengigheter å holde kontroll på.
         </p>
+
+        <section className="intro-grid" style={{ marginTop: "1rem" }}>
+          <div className="intro-card">
+            <h3>Oversikt</h3>
+            <p>
+              Samle aktiviteter, datoer og ansvar på ett sted, slik at både du
+              og teamet ser hva som skjer – og hva som kommer.
+            </p>
+          </div>
+
+          <div className="intro-card">
+            <h3>Fremdrift</h3>
+            <p>
+              Følg utviklingen i prosjektet på en ryddig måte, og få bedre
+              kontroll når planene endrer seg (for det gjør de).
+            </p>
+          </div>
+
+          <div className="intro-card">
+            <h3>Praktisk</h3>
+            <p>
+              Bygget med “digital verktøymaker”-tankegang: det skal være
+              forståelig, funksjonelt og til å stole på – ikke bare pent i en demo.
+            </p>
+          </div>
+        </section>
+
+        <p style={{ marginTop: "1rem" }}>
+          <Link to="/progress">Gå til priser og kjøp →</Link>
+        </p>
+      </section>
+
+      {/* HVEM PASSER DET FOR */}
+      <section style={{ marginTop: "3rem" }}>
+        <h2 style={{ marginBottom: "0.4rem" }}>Hvem passer det for?</h2>
         <p
           style={{
             marginTop: 0,
-            marginBottom: "1.4rem",
-            maxWidth: "720px",
+            maxWidth: "820px",
             color: "var(--mcl-text-dim)",
-            fontSize: "0.9rem",
+            lineHeight: 1.6,
           }}
         >
-          Manage System vil etter hvert få eget nettsted på{" "}
-          <strong>ManageSystem.no</strong> / <strong>.app</strong>. Inntil videre
-          finner du informasjon om verktøyene her på MorningCoffeeLabs.no.
+          Manage Progress er laget for prosjektbasert arbeid – uansett bransje.
+          Typisk for:
         </p>
 
-        <section className="intro-grid">
+        <section className="intro-grid" style={{ marginTop: "1rem" }}>
           <div className="intro-card">
-            <h3>Manage Progress</h3>
+            <h3>Små og mellomstore team</h3>
             <p>
-              Fremdriftsverktøy for prosjekter – fra små interne initiativ til
-              større leveranser. Hjelper deg å strukturere faser, aktiviteter og
-              avhengigheter uten å miste oversikten.
-            </p>
-            <p style={{ marginTop: "0.6rem" }}>
-              <Link to="/produkter/manage-progress">
-                Les mer om Manage Progress →
-              </Link>
+              Team som trenger en enkel og tydelig måte å planlegge og følge opp
+              arbeid – uten å innføre “et helt system”.
             </p>
           </div>
 
           <div className="intro-card">
-            <h3>Manage Documents</h3>
+            <h3>Prosjektledere og fagansvarlige</h3>
             <p>
-              Planlagt modul for dokumenter, tegninger og beslutninger. Målet er
-              å samle dokumentasjon og kontekst på ett sted, tett koblet mot
-              fremdriften i prosjektene.
-            </p>
-            <p style={{ marginTop: "0.6rem" }}>
-              <Link to="/produkter/manage-documents">
-                Se planene for Manage Documents →
-              </Link>
+              Når du må ha kontroll på helheten, samtidig som du er tett på
+              leveransen og detaljene.
             </p>
           </div>
 
           <div className="intro-card">
-            <h3>Videre verktøy i Manage-serien</h3>
+            <h3>Alle som i dag bruker Excel</h3>
             <p>
-              På sikt vil Manage System utvides med flere moduler for prosjekter
-              og drift – for eksempel rapportering, oppfølging og enkle
-              statusverktøy. Alt bygges stegvis, basert på faktiske behov i
-              arbeidshverdagen.
+              Når planlegging og oppfølging blir et lappeteppe av filer, kopier
+              og “hvor var den siste versjonen igjen?”.
             </p>
           </div>
         </section>
       </section>
 
-      {/* SEKSJON: TJENESTER FOR BEDRIFTER */}
+      {/* MCL + BYGG PÅ BESTILLING (tonet ned) */}
       <section style={{ marginTop: "3rem" }}>
-        <h2 style={{ marginBottom: "0.4rem" }}>Digitale verktøy på bestilling</h2>
+        <h2 style={{ marginBottom: "0.4rem" }}>Morning Coffee Labs</h2>
         <p
           style={{
             marginTop: 0,
-            marginBottom: "1rem",
-            maxWidth: "720px",
+            maxWidth: "820px",
             color: "var(--mcl-text-dim)",
             lineHeight: 1.6,
           }}
         >
-          I tillegg til egne produkter kan vi hjelpe bedrifter som trenger sine
-          egne, praktiske verktøy. Det kan være alt fra små interne løsninger
-          til mer omfattende systemer som støtter prosjekter, kvalitet eller
-          dokumentasjon.
+          Morning Coffee Labs er et lite verksted for digitale verktøy. Vi
+          bygger produkter som tar utgangspunkt i virkelige arbeidsmåter – med
+          fokus på kvalitet, dokumentasjon og samarbeid på tvers av roller.
         </p>
 
-        <div
-          className="intro-grid"
-          style={{ marginBottom: "0.5rem", marginTop: "0.8rem" }}
-        >
+        <section className="intro-grid" style={{ marginTop: "1rem" }}>
           <div className="intro-card">
-            <h3>Fra Excel til app</h3>
+            <h3>Bygge på bestilling</h3>
             <p>
-              Mange virksomheter har viktige verktøy gjemt i regneark:
-              kalkyler, sjekklister, maler og skjema. Vi kan hjelpe med å gjøre
-              slike løsninger om til robuste, brukervennlige apper som tåler
-              daglig bruk – uten at malene blir ødelagt underveis.
+              Vi kan også hjelpe bedrifter med egne verktøy – for eksempel å gjøre
+              Excel-baserte løsninger mer robuste, eller lage små systemer som
+              støtter konkrete arbeidsflyter.
+            </p>
+            <p style={{ marginTop: "0.6rem" }}>
+              <Link to="/tjenester">Les mer om hva vi kan tilby →</Link>
             </p>
           </div>
 
           <div className="intro-card">
-            <h3>Digitale arbeidsflyter</h3>
+            <h3>Kort vei til beslutning</h3>
             <p>
-              Har dere manuelle prosesser som egentlig burde vært digitale? Vi
-              kan modellere arbeidsflyten og bygge en enkel løsning rundt den,
-              slik at informasjon ikke forsvinner på e-post, i innbokser eller
-              tilfeldige filer.
+              Hos oss snakker du direkte med den som designer og bygger
+              verktøyene. Det gir raske avklaringer og mindre friksjon.
+            </p>
+            <p style={{ marginTop: "0.6rem" }}>
+              <Link to="/kontakt">Ta kontakt →</Link>
             </p>
           </div>
 
           <div className="intro-card">
-            <h3>Verktøy tilpasset hverdagen</h3>
+            <h3>Digitale verktøymakere</h3>
             <p>
-              I stedet for generelle “one size fits all”-systemer bygger vi
-              verktøy som er tilpasset hvordan dere faktisk jobber. Du har
-              direkte kontakt med den som designer og utvikler verktøyet – uten
-              unødvendige mellomledd.
+              Vi er stolte av å kalle oss digitale verktøymakere. Målet er
+              alltid det samme: å gjøre arbeidshverdagen litt enklere – og
+              prosjektene litt tryggere å styre.
             </p>
           </div>
-        </div>
-
-        <p
-          style={{
-            marginTop: "0.4rem",
-            maxWidth: "700px",
-            color: "var(--mcl-text-dim)",
-            lineHeight: 1.6,
-          }}
-        >
-          Hvis du har en idé, et eksisterende regneark eller en utfordring du
-          tror kan løses med et digitalt verktøy, tar jeg gjerne en uforpliktende
-          prat.
-        </p>
-
-        <p style={{ marginTop: "0.6rem" }}>
-          <Link to="/kontakt" className="hero-cta">
-            Ta kontakt om et prosjekt →
-          </Link>
-        </p>
-      </section>
-
-      {/* SEKSJON: HVORDAN VI JOBBER */}
-      <section style={{ marginTop: "3rem" }}>
-        <h2 style={{ marginBottom: "0.4rem" }}>Hvordan vi jobber</h2>
-        <p
-          style={{
-            marginTop: 0,
-            marginBottom: "0.8rem",
-            maxWidth: "720px",
-            color: "var(--mcl-text-dim)",
-            lineHeight: 1.6,
-          }}
-        >
-          Morning Coffee Labs bygger digitale verktøy med samme tankegang som
-          godt håndverk: det skal være tydelig, funksjonelt og til å stole på.
-          Erfaring fra praktiske fag, prosjektarbeid og tverrfaglige leveranser
-          gjør at vi kjenner både krav til kvalitet, dokumentasjon og samarbeid
-          på tvers av roller.
-        </p>
-        <p
-          style={{
-            marginTop: 0,
-            maxWidth: "720px",
-            color: "var(--mcl-text-dim)",
-            lineHeight: 1.6,
-          }}
-        >
-          Dette er ikke et stort byrå med mange lag og kjølige prosesser. Det er
-          et lite verksted for digitale verktøy, der målet er enkelt: å lage
-          løsninger som faktisk hjelper folk i arbeidshverdagen.
-        </p>
+        </section>
       </section>
     </main>
   );
